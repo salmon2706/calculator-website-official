@@ -84,6 +84,9 @@
                                    cursor: pointer; border: none; box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3); }
         .slider-value { font-weight: 600; color: var(--primary); min-width: 50px; text-align: right; flex-shrink: 0; }
         
+        .cups-display { font-size: 0.85rem; color: var(--neutral-600); text-align: center; margin-top: 4px; margin-bottom: 12px;
+                       padding: 4px 8px; background: var(--neutral-100); border-radius: 6px; font-weight: 500; }
+        
         .validation { margin-top: 16px; padding: 12px 20px; border-radius: 10px; font-weight: 500; text-align: center; }
         .valid { background: rgba(48, 209, 88, 0.1); color: #1B7B3A; border: 1px solid rgba(48, 209, 88, 0.2); }
         .invalid { background: rgba(255, 105, 97, 0.1); color: #D1242F; border: 1px solid rgba(255, 105, 97, 0.2); }
@@ -305,6 +308,7 @@
                         <input type="range" class="slider" id="currentPaper" min="0" max="100" value="30" step="5">
                         <div class="slider-value" id="currentPaperValue">30%</div>
                     </div>
+                    <div class="cups-display" id="currentPaperCups">300 cups/day</div>
                     
                     <div class="slider-row">
                         <div class="slider-color handwash"></div>
@@ -312,6 +316,7 @@
                         <input type="range" class="slider" id="currentHandwash" min="0" max="100" value="20" step="5">
                         <div class="slider-value" id="currentHandwashValue">20%</div>
                     </div>
+                    <div class="cups-display" id="currentHandwashCups">200 cups/day</div>
                     
                     <div class="slider-row">
                         <div class="slider-color dishwasher"></div>
@@ -319,6 +324,7 @@
                         <input type="range" class="slider" id="currentDishwasher" min="0" max="100" value="50" step="5">
                         <div class="slider-value" id="currentDishwasherValue">50%</div>
                     </div>
+                    <div class="cups-display" id="currentDishwasherCups">500 cups/day</div>
                 </div>
                 
                 <div class="validation" id="currentValidation">Adjust to total 100%</div>
@@ -338,6 +344,7 @@
                         <input type="range" class="slider" id="optimalPaper" min="0" max="100" value="5" step="5">
                         <div class="slider-value" id="optimalPaperValue">5%</div>
                     </div>
+                    <div class="cups-display" id="optimalPaperCups">50 cups/day</div>
                     
                     <div class="slider-row">
                         <div class="slider-color instarinse"></div>
@@ -345,6 +352,7 @@
                         <input type="range" class="slider" id="optimalInstarinse" min="0" max="100" value="70" step="5">
                         <div class="slider-value" id="optimalInstarinseValue">70%</div>
                     </div>
+                    <div class="cups-display" id="optimalInstarinseCups">700 cups/day</div>
                     
                     <div class="slider-row">
                         <div class="slider-color handwash"></div>
@@ -352,6 +360,7 @@
                         <input type="range" class="slider" id="optimalHandwash" min="0" max="100" value="10" step="5">
                         <div class="slider-value" id="optimalHandwashValue">10%</div>
                     </div>
+                    <div class="cups-display" id="optimalHandwashCups">100 cups/day</div>
                     
                     <div class="slider-row">
                         <div class="slider-color dishwasher"></div>
@@ -359,6 +368,7 @@
                         <input type="range" class="slider" id="optimalDishwasher" min="0" max="100" value="15" step="5">
                         <div class="slider-value" id="optimalDishwasherValue">15%</div>
                     </div>
+                    <div class="cups-display" id="optimalDishwasherCups">150 cups/day</div>
                 </div>
                 
                 <div class="validation" id="optimalValidation">Adjust to total 100%</div>
@@ -764,6 +774,9 @@
             currentPaperValue: document.getElementById('currentPaperValue'),
             currentHandwashValue: document.getElementById('currentHandwashValue'),
             currentDishwasherValue: document.getElementById('currentDishwasherValue'),
+            currentPaperCups: document.getElementById('currentPaperCups'),
+            currentHandwashCups: document.getElementById('currentHandwashCups'),
+            currentDishwasherCups: document.getElementById('currentDishwasherCups'),
             currentValidation: document.getElementById('currentValidation'),
             
             optimalPaper: document.getElementById('optimalPaper'),
@@ -774,6 +787,10 @@
             optimalInstarinseValue: document.getElementById('optimalInstarinseValue'),
             optimalHandwashValue: document.getElementById('optimalHandwashValue'),
             optimalDishwasherValue: document.getElementById('optimalDishwasherValue'),
+            optimalPaperCups: document.getElementById('optimalPaperCups'),
+            optimalInstarinseCups: document.getElementById('optimalInstarinseCups'),
+            optimalHandwashCups: document.getElementById('optimalHandwashCups'),
+            optimalDishwasherCups: document.getElementById('optimalDishwasherCups'),
             optimalValidation: document.getElementById('optimalValidation'),
             
             resultsSection: document.getElementById('resultsSection'),
@@ -846,17 +863,28 @@
         function updateDailyUsage() {
             const daily = (state.teamSize * state.cupsPerDay * state.officeDays) / 5;
             els.dailyUsage.textContent = formatNumber(daily);
+            
+            // Update all cup displays when daily usage changes
+            updateSliderDisplay('current');
+            updateSliderDisplay('optimal');
             calculateSavings();
         }
 
         function updateSliderDisplay(type) {
             const mix = state[type];
             const total = Object.values(mix).reduce((sum, val) => sum + val, 0);
+            const dailyCups = (state.teamSize * state.cupsPerDay * state.officeDays) / 5;
             
             if (type === 'current') {
                 els.currentPaperValue.textContent = mix.paper + '%';
                 els.currentHandwashValue.textContent = mix.handwash + '%';
                 els.currentDishwasherValue.textContent = mix.dishwasher + '%';
+                
+                // Update live cup counts
+                els.currentPaperCups.textContent = formatNumber((mix.paper / 100) * dailyCups, 0) + ' cups/day';
+                els.currentHandwashCups.textContent = formatNumber((mix.handwash / 100) * dailyCups, 0) + ' cups/day';
+                els.currentDishwasherCups.textContent = formatNumber((mix.dishwasher / 100) * dailyCups, 0) + ' cups/day';
+                
                 els.currentValidation.textContent = total === 100 ? '✓ Perfect! Total: 100%' : `Total: ${total}% - adjust to 100%`;
                 els.currentValidation.className = total === 100 ? 'validation valid' : 'validation invalid';
             } else {
@@ -864,6 +892,13 @@
                 els.optimalInstarinseValue.textContent = mix.instarinse + '%';
                 els.optimalHandwashValue.textContent = mix.handwash + '%';
                 els.optimalDishwasherValue.textContent = mix.dishwasher + '%';
+                
+                // Update live cup counts
+                els.optimalPaperCups.textContent = formatNumber((mix.paper / 100) * dailyCups, 0) + ' cups/day';
+                els.optimalInstarinseCups.textContent = formatNumber((mix.instarinse / 100) * dailyCups, 0) + ' cups/day';
+                els.optimalHandwashCups.textContent = formatNumber((mix.handwash / 100) * dailyCups, 0) + ' cups/day';
+                els.optimalDishwasherCups.textContent = formatNumber((mix.dishwasher / 100) * dailyCups, 0) + ' cups/day';
+                
                 els.optimalValidation.textContent = total === 100 ? '✓ Perfect! Total: 100%' : `Total: ${total}% - adjust to 100%`;
                 els.optimalValidation.className = total === 100 ? 'validation valid' : 'validation invalid';
             }
