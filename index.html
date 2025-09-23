@@ -632,7 +632,7 @@
     <div class="modal-backdrop" id="modalBackdrop"></div>
     <div class="assumptions-modal" id="assumptionsModal">
         <div class="modal-header">
-            <button class="close-btn" onclick="closeAssumptions()" title="Close assumptions panel">×</button>
+            <button class="close-btn" onclick="closeAssumptions(); return false;" title="Close">×</button>
             <h3 class="modal-title">Calculation Assumptions</h3>
             <p class="modal-subtitle">Modify values to match your specific situation</p>
         </div>
@@ -818,8 +818,11 @@
                 
                 <!-- Mobile-friendly close button at bottom -->
                 <div style="padding: 20px; text-align: center; border-top: 1px solid var(--neutral-200); background: var(--neutral-50);">
-                    <button onclick="closeAssumptions()" style="background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem;">
+                    <button onclick="closeAssumptions(); return false;" style="background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; margin-right: 12px;">
                         Done
+                    </button>
+                    <button onclick="forceCloseAssumptions(); return false;" style="background: var(--neutral-600); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem;">
+                        Force Close
                     </button>
                 </div>
             </div>
@@ -1174,44 +1177,25 @@
         function openAssumptions() {
             document.getElementById('modalBackdrop').classList.add('open');
             document.getElementById('assumptionsModal').classList.add('open');
-            
-            // Mobile-friendly scroll lock
-            if (window.innerWidth <= 640) {
-                const scrollY = window.scrollY;
-                document.body.style.position = 'fixed';
-                document.body.style.top = `-${scrollY}px`;
-                document.body.style.width = '100%';
-                document.body.setAttribute('data-scroll-y', scrollY);
-            } else {
-                document.body.style.overflow = 'hidden';
-            }
+            document.body.style.overflow = 'hidden';
         }
 
         function closeAssumptions() {
+            console.log('Closing assumptions modal...');
             const backdrop = document.getElementById('modalBackdrop');
             const modal = document.getElementById('assumptionsModal');
             
-            if (backdrop) backdrop.classList.remove('open');
-            if (modal) modal.classList.remove('open');
-            
-            // Clean up main grid
-            const mainGrid = document.getElementById('mainGrid');
-            if (mainGrid) mainGrid.classList.remove('assumptions-open');
-            
-            // Restore scrolling - simplified approach
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.width = '';
-            document.body.style.overflow = '';
-            
-            // Get saved scroll position and restore
-            const scrollY = document.body.getAttribute('data-scroll-y');
-            if (scrollY) {
-                document.body.removeAttribute('data-scroll-y');
-                setTimeout(() => {
-                    window.scrollTo(0, parseInt(scrollY));
-                }, 50);
+            if (backdrop) {
+                backdrop.classList.remove('open');
+                console.log('Backdrop closed');
             }
+            if (modal) {
+                modal.classList.remove('open');
+                console.log('Modal closed');
+            }
+            
+            document.body.style.overflow = 'auto';
+            console.log('Body overflow restored');
         }
 
         // Toggle breakdown rows in table
@@ -1245,11 +1229,20 @@
 
         window.openAssumptions = openAssumptions;
         window.closeAssumptions = closeAssumptions;
+        window.forceCloseAssumptions = forceCloseAssumptions;
         window.updateCalculations = updateCalculations;
         window.resetAssumption = resetAssumption;
         window.toggleBreakdown = toggleBreakdown;
 
-        // Mobile modal fixes
+        // Force close function for debugging
+        function forceCloseAssumptions() {
+            console.log('Force closing...');
+            document.getElementById('modalBackdrop').style.display = 'none';
+            document.getElementById('assumptionsModal').style.transform = 'translateX(100%)';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Simple event handlers
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeAssumptions();
@@ -1257,31 +1250,19 @@
         });
 
         // Backdrop click to close
-        document.getElementById('modalBackdrop').addEventListener('click', function(e) {
-            closeAssumptions();
-        });
-
-        // Prevent modal content clicks from closing modal
-        document.getElementById('assumptionsModal').addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-
-        // Ensure close button works - add explicit event listener
-        document.addEventListener('DOMContentLoaded', function() {
-            const closeBtn = document.querySelector('.close-btn');
-            if (closeBtn) {
-                closeBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeAssumptions();
-                });
-                closeBtn.addEventListener('touchend', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    closeAssumptions();
-                });
+        document.getElementById('modalBackdrop').addEventListener('click', closeAssumptions);
+        
+        // Double-tap to force close on mobile (debugging)
+        let tapCount = 0;
+        document.getElementById('modalBackdrop').addEventListener('touchend', function(e) {
+            tapCount++;
+            if (tapCount === 2) {
+                forceCloseAssumptions();
+                tapCount = 0;
             }
+            setTimeout(() => { tapCount = 0; }, 300);
         });
+
 
         // Initialize
         updateDailyUsage();
