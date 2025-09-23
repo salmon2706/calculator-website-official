@@ -225,26 +225,63 @@
             .step { padding: 20px; }
             
             /* Fix assumptions modal on mobile */
-            .assumptions-modal { width: 95%; right: -95%; left: 2.5%; max-height: 90vh; top: 5vh; height: 90vh; }
-            .modal-header { padding: 20px; }
+            .assumptions-modal { 
+                width: 100%; 
+                right: -100%; 
+                left: 0; 
+                top: 0;
+                height: 100vh; 
+                max-height: none;
+                border-radius: 0;
+                border-left: none;
+            }
+            .assumptions-modal.open { right: 0; }
+            .modal-header { padding: 20px; position: sticky; top: 0; z-index: 10; }
             .modal-content { padding: 20px; }
             .assumption-group { padding: 16px; margin-bottom: 20px; }
             .assumption-row { flex-wrap: wrap; gap: 8px; }
             .assumption-input { width: 100px; font-size: 0.9rem; padding: 8px; }
             .assumption-unit { font-size: 0.8rem; }
+            .close-btn { 
+                top: 15px; 
+                right: 15px; 
+                width: 40px; 
+                height: 40px; 
+                font-size: 1.2rem;
+                background: var(--neutral-200);
+                z-index: 20;
+            }
             
             /* Fix table overflow on mobile */
-            .table-container { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -20px; padding: 0 20px; }
+            .table-container { 
+                overflow-x: auto; 
+                -webkit-overflow-scrolling: touch; 
+                margin: 0 -20px; 
+                padding: 0 20px;
+                border-radius: 12px;
+            }
             .table { min-width: 600px; font-size: 0.8rem; }
             .table th, .table td { padding: 8px 4px; white-space: nowrap; }
             .table th { font-size: 0.75rem; }
             .method-breakdown { flex-direction: column; gap: 8px; }
             .method-breakdown span { font-size: 0.8rem; display: block; }
             
+            /* Add scroll indicator for table */
+            .table-container::after {
+                content: '← Scroll for more →';
+                position: absolute;
+                bottom: -25px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 0.7rem;
+                color: var(--neutral-500);
+                pointer-events: none;
+            }
+            
             /* Ensure everything fits on mobile */
             .calculator { padding: 15px; }
             .comparisons-section { padding: 30px 20px; margin: 40px 0; }
-            .breakdown-section { padding: 30px 20px; }
+            .breakdown-section { padding: 30px 20px; position: relative; }
             .results-cards { padding: 40px 20px; }
             
             /* Fix validation messages on mobile */
@@ -584,7 +621,7 @@
     </div>
 
     <!-- Assumptions Modal -->
-    <div class="modal-backdrop" id="modalBackdrop" onclick="closeAssumptions()"></div>
+    <div class="modal-backdrop" id="modalBackdrop"></div>
     <div class="assumptions-modal" id="assumptionsModal">
         <div class="modal-header">
             <button class="close-btn" onclick="closeAssumptions()">×</button>
@@ -1122,13 +1159,34 @@
         function openAssumptions() {
             document.getElementById('modalBackdrop').classList.add('open');
             document.getElementById('assumptionsModal').classList.add('open');
-            document.body.style.overflow = 'hidden';
+            
+            // Mobile-friendly scroll lock
+            if (window.innerWidth <= 640) {
+                const scrollY = window.scrollY;
+                document.body.style.position = 'fixed';
+                document.body.style.top = `-${scrollY}px`;
+                document.body.style.width = '100%';
+                document.body.setAttribute('data-scroll-y', scrollY);
+            } else {
+                document.body.style.overflow = 'hidden';
+            }
         }
 
         function closeAssumptions() {
             document.getElementById('modalBackdrop').classList.remove('open');
             document.getElementById('assumptionsModal').classList.remove('open');
-            document.body.style.overflow = 'auto';
+            
+            // Restore scroll position
+            if (window.innerWidth <= 640) {
+                const scrollY = document.body.getAttribute('data-scroll-y');
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                document.body.removeAttribute('data-scroll-y');
+                window.scrollTo(0, parseInt(scrollY || '0'));
+            } else {
+                document.body.style.overflow = 'auto';
+            }
         }
 
         // Toggle breakdown rows in table
@@ -1165,6 +1223,20 @@
         window.updateCalculations = updateCalculations;
         window.resetAssumption = resetAssumption;
         window.toggleBreakdown = toggleBreakdown;
+
+        // Mobile modal fixes
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeAssumptions();
+            }
+        });
+
+        // Prevent backdrop from interfering with modal content
+        document.getElementById('modalBackdrop').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAssumptions();
+            }
+        });
 
         // Initialize
         updateDailyUsage();
