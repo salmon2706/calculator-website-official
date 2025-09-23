@@ -16,8 +16,13 @@
         }
         
         body {
+            font-family: inherit !important;
             background: #f0f0f0;
             color: var(--neutral-800); -webkit-font-smoothing: antialiased;
+        }
+        
+        * {
+            font-family: inherit !important;
         }
         
         .calculator { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
@@ -196,16 +201,15 @@
         .hidden { display: none !important; }
         
         /* Mobile Responsive */
-        @media (max-width: 1024px) {
+        @media (max-width: 1024px) and (min-width: 641px) {
             .calculator { padding: 20px; }
             .header { padding: 40px 20px; }
             .steps-grid { grid-template-columns: 1fr; gap: 20px; }
             .comparison-grid { grid-template-columns: repeat(2, 1fr); }
             .results-grid { grid-template-columns: repeat(2, 1fr); }
-            .assumptions-modal { width: 90%; right: -90%; left: 5%; }
             .instruction-grid { grid-template-columns: repeat(2, 1fr); }
             
-            /* Fix table overflow on tablet */
+            /* Fix table overflow on tablet - but keep desktop modal behavior */
             .table { font-size: 0.9rem; }
             .table th, .table td { padding: 12px 8px; }
         }
