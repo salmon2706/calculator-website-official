@@ -818,11 +818,8 @@
                 
                 <!-- Mobile-friendly close button at bottom -->
                 <div style="padding: 20px; text-align: center; border-top: 1px solid var(--neutral-200); background: var(--neutral-50);">
-                    <button onclick="closeAssumptions(); return false;" style="background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem; margin-right: 12px;">
+                    <button onclick="closeAssumptions(); return false;" style="background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem;">
                         Done
-                    </button>
-                    <button onclick="forceCloseAssumptions(); return false;" style="background: var(--neutral-600); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem;">
-                        Force Close
                     </button>
                 </div>
             </div>
@@ -1181,21 +1178,18 @@
         }
 
         function closeAssumptions() {
-            console.log('Closing assumptions modal...');
-            const backdrop = document.getElementById('modalBackdrop');
-            const modal = document.getElementById('assumptionsModal');
-            
-            if (backdrop) {
-                backdrop.classList.remove('open');
-                console.log('Backdrop closed');
-            }
-            if (modal) {
-                modal.classList.remove('open');
-                console.log('Modal closed');
-            }
-            
+            // Use the working force close method
+            document.getElementById('modalBackdrop').style.display = 'none';
+            document.getElementById('assumptionsModal').style.transform = 'translateX(100%)';
             document.body.style.overflow = 'auto';
-            console.log('Body overflow restored');
+            
+            // Reset classes for next open
+            setTimeout(() => {
+                document.getElementById('modalBackdrop').classList.remove('open');
+                document.getElementById('assumptionsModal').classList.remove('open');
+                document.getElementById('modalBackdrop').style.display = '';
+                document.getElementById('assumptionsModal').style.transform = '';
+            }, 100);
         }
 
         // Toggle breakdown rows in table
@@ -1229,18 +1223,9 @@
 
         window.openAssumptions = openAssumptions;
         window.closeAssumptions = closeAssumptions;
-        window.forceCloseAssumptions = forceCloseAssumptions;
         window.updateCalculations = updateCalculations;
         window.resetAssumption = resetAssumption;
         window.toggleBreakdown = toggleBreakdown;
-
-        // Force close function for debugging
-        function forceCloseAssumptions() {
-            console.log('Force closing...');
-            document.getElementById('modalBackdrop').style.display = 'none';
-            document.getElementById('assumptionsModal').style.transform = 'translateX(100%)';
-            document.body.style.overflow = 'auto';
-        }
 
         // Simple event handlers
         document.addEventListener('keydown', function(e) {
@@ -1251,17 +1236,6 @@
 
         // Backdrop click to close
         document.getElementById('modalBackdrop').addEventListener('click', closeAssumptions);
-        
-        // Double-tap to force close on mobile (debugging)
-        let tapCount = 0;
-        document.getElementById('modalBackdrop').addEventListener('touchend', function(e) {
-            tapCount++;
-            if (tapCount === 2) {
-                forceCloseAssumptions();
-                tapCount = 0;
-            }
-            setTimeout(() => { tapCount = 0; }, 300);
-        });
 
 
         // Initialize
