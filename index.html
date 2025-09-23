@@ -170,9 +170,11 @@
         .modal-header { padding: 30px; border-bottom: 1px solid var(--neutral-200); background: var(--neutral-50); }
         .modal-title { font-size: 1.5rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 8px; }
         .modal-subtitle { color: var(--neutral-600); font-size: 1rem; }
-        .close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none;
-                    width: 32px; height: 32px; border-radius: 50%; cursor: pointer; transition: all 0.2s; }
-        .close-btn:hover { background: var(--neutral-200); }
+        .close-btn { position: absolute; top: 20px; right: 20px; background: var(--neutral-200); border: none;
+                    width: 32px; height: 32px; border-radius: 50%; cursor: pointer; transition: all 0.2s;
+                    z-index: 1001; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
+        .close-btn:hover { background: var(--neutral-300); }
+        .close-btn:active { background: var(--neutral-400); transform: scale(0.95); }
         
         .modal-content { padding: 30px; }
         .assumption-group { margin-bottom: 40px; padding: 24px; background: var(--neutral-50); border-radius: 16px; }
@@ -245,11 +247,17 @@
             .close-btn { 
                 top: 15px; 
                 right: 15px; 
-                width: 40px; 
-                height: 40px; 
-                font-size: 1.2rem;
-                background: var(--neutral-200);
-                z-index: 20;
+                width: 44px; 
+                height: 44px; 
+                font-size: 1.4rem;
+                background: var(--neutral-300);
+                z-index: 1002;
+                border: 2px solid var(--white);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            }
+            .close-btn:active {
+                background: var(--neutral-500);
+                transform: scale(0.9);
             }
             
             /* Fix table overflow on mobile */
@@ -624,7 +632,7 @@
     <div class="modal-backdrop" id="modalBackdrop"></div>
     <div class="assumptions-modal" id="assumptionsModal">
         <div class="modal-header">
-            <button class="close-btn" onclick="closeAssumptions()">×</button>
+            <button class="close-btn" onclick="closeAssumptions()" title="Close assumptions panel">×</button>
             <h3 class="modal-title">Calculation Assumptions</h3>
             <p class="modal-subtitle">Modify values to match your specific situation</p>
         </div>
@@ -806,6 +814,13 @@
                         </button>
                     </div>
                     <div class="assumption-source"><a href="#" class="source-link">UK Minimum Wage</a></div>
+                </div>
+                
+                <!-- Mobile-friendly close button at bottom -->
+                <div style="padding: 20px; text-align: center; border-top: 1px solid var(--neutral-200); background: var(--neutral-50);">
+                    <button onclick="closeAssumptions()" style="background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem;">
+                        Done
+                    </button>
                 </div>
             </div>
         </div>
@@ -1173,19 +1188,29 @@
         }
 
         function closeAssumptions() {
-            document.getElementById('modalBackdrop').classList.remove('open');
-            document.getElementById('assumptionsModal').classList.remove('open');
+            const backdrop = document.getElementById('modalBackdrop');
+            const modal = document.getElementById('assumptionsModal');
             
-            // Restore scroll position
-            if (window.innerWidth <= 640) {
-                const scrollY = document.body.getAttribute('data-scroll-y');
-                document.body.style.position = '';
-                document.body.style.top = '';
-                document.body.style.width = '';
+            if (backdrop) backdrop.classList.remove('open');
+            if (modal) modal.classList.remove('open');
+            
+            // Clean up main grid
+            const mainGrid = document.getElementById('mainGrid');
+            if (mainGrid) mainGrid.classList.remove('assumptions-open');
+            
+            // Restore scrolling - simplified approach
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            document.body.style.overflow = '';
+            
+            // Get saved scroll position and restore
+            const scrollY = document.body.getAttribute('data-scroll-y');
+            if (scrollY) {
                 document.body.removeAttribute('data-scroll-y');
-                window.scrollTo(0, parseInt(scrollY || '0'));
-            } else {
-                document.body.style.overflow = 'auto';
+                setTimeout(() => {
+                    window.scrollTo(0, parseInt(scrollY));
+                }, 50);
             }
         }
 
@@ -1231,10 +1256,30 @@
             }
         });
 
-        // Prevent backdrop from interfering with modal content
+        // Backdrop click to close
         document.getElementById('modalBackdrop').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeAssumptions();
+            closeAssumptions();
+        });
+
+        // Prevent modal content clicks from closing modal
+        document.getElementById('assumptionsModal').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Ensure close button works - add explicit event listener
+        document.addEventListener('DOMContentLoaded', function() {
+            const closeBtn = document.querySelector('.close-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeAssumptions();
+                });
+                closeBtn.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeAssumptions();
+                });
             }
         });
 
