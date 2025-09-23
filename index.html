@@ -228,36 +228,48 @@
             
             /* Fix assumptions modal on mobile */
             .assumptions-modal { 
-                width: 100%; 
-                right: -100%; 
-                left: 0; 
+                width: 100vw; 
+                right: -100vw; 
+                left: auto; 
                 top: 0;
                 height: 100vh; 
-                max-height: none;
+                max-height: 100vh;
                 border-radius: 0;
                 border-left: none;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
             .assumptions-modal.open { right: 0; }
-            .modal-header { padding: 20px; position: sticky; top: 0; z-index: 10; }
-            .modal-content { padding: 20px; }
+            .modal-header { padding: 20px; position: sticky; top: 0; z-index: 10; background: var(--neutral-50); }
+            .modal-content { padding: 20px; padding-bottom: 80px; }
             .assumption-group { padding: 16px; margin-bottom: 20px; }
             .assumption-row { flex-wrap: wrap; gap: 8px; }
             .assumption-input { width: 100px; font-size: 0.9rem; padding: 8px; }
             .assumption-unit { font-size: 0.8rem; }
             .close-btn { 
-                top: 15px; 
-                right: 15px; 
+                position: fixed;
+                top: 20px; 
+                right: 20px; 
                 width: 44px; 
                 height: 44px; 
-                font-size: 1.4rem;
-                background: var(--neutral-300);
-                z-index: 1002;
+                font-size: 1.6rem;
+                background: var(--neutral-700);
+                color: white;
+                z-index: 1010;
                 border: 2px solid var(--white);
-                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                font-weight: bold;
+                line-height: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .close-btn:hover {
+                background: var(--neutral-800);
             }
             .close-btn:active {
-                background: var(--neutral-500);
-                transform: scale(0.9);
+                background: var(--neutral-900);
+                transform: scale(0.95);
             }
             
             /* Fix table overflow on mobile */
@@ -632,7 +644,7 @@
     <div class="modal-backdrop" id="modalBackdrop"></div>
     <div class="assumptions-modal" id="assumptionsModal">
         <div class="modal-header">
-            <button class="close-btn" onclick="closeAssumptions(); return false;" title="Close">×</button>
+            <button class="close-btn" onclick="closeAssumptions(); return false;" title="Close" type="button" aria-label="Close assumptions panel">×</button>
             <h3 class="modal-title">Calculation Assumptions</h3>
             <p class="modal-subtitle">Modify values to match your specific situation</p>
         </div>
@@ -1172,24 +1184,34 @@
         }
 
         function openAssumptions() {
-            document.getElementById('modalBackdrop').classList.add('open');
-            document.getElementById('assumptionsModal').classList.add('open');
+            const backdrop = document.getElementById('modalBackdrop');
+            const modal = document.getElementById('assumptionsModal');
+            
+            backdrop.classList.add('open');
+            modal.classList.add('open');
             document.body.style.overflow = 'hidden';
+            
+            // Ensure mobile viewport is properly set
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
         }
 
         function closeAssumptions() {
-            // Use the working force close method
-            document.getElementById('modalBackdrop').style.display = 'none';
-            document.getElementById('assumptionsModal').style.transform = 'translateX(100%)';
-            document.body.style.overflow = 'auto';
+            const backdrop = document.getElementById('modalBackdrop');
+            const modal = document.getElementById('assumptionsModal');
             
-            // Reset classes for next open
-            setTimeout(() => {
-                document.getElementById('modalBackdrop').classList.remove('open');
-                document.getElementById('assumptionsModal').classList.remove('open');
-                document.getElementById('modalBackdrop').style.display = '';
-                document.getElementById('assumptionsModal').style.transform = '';
-            }, 100);
+            // Simple, reliable close
+            backdrop.classList.remove('open');
+            modal.classList.remove('open');
+            
+            // Reset body styles for mobile
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            
+            // Clear any inline styles that might interfere
+            backdrop.style.cssText = '';
+            modal.style.cssText = '';
         }
 
         // Toggle breakdown rows in table
@@ -1234,8 +1256,24 @@
             }
         });
 
-        // Backdrop click to close
-        document.getElementById('modalBackdrop').addEventListener('click', closeAssumptions);
+        // Backdrop click to close (with touch support)
+        document.getElementById('modalBackdrop').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAssumptions();
+            }
+        });
+        
+        // Prevent modal content clicks from bubbling to backdrop
+        document.getElementById('assumptionsModal').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        // Additional mobile touch events
+        document.getElementById('modalBackdrop').addEventListener('touchend', function(e) {
+            if (e.target === this) {
+                closeAssumptions();
+            }
+        });
 
 
         // Initialize
