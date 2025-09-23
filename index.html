@@ -9,20 +9,16 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
-            --primary: #007AFF; --primary-hover: #0056b3; --success: #30D158; --warning: #FF9F0A;
+            --primary: #90d4f6; --primary-hover: #7cc3f0; --success: #30D158; --warning: #FF9F0A;
             --neutral-50: #FAFAFA; --neutral-100: #F2F2F7; --neutral-200: #E5E5EA; --neutral-300: #D1D1D6;
             --neutral-600: #8E8E93; --neutral-700: #6D6D70; --neutral-800: #48484A; --neutral-900: #1C1C1E;
             --white: #FFFFFF; --glass: rgba(255, 255, 255, 0.8);
         }
         
         body {
-            font-family: inherit !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
             background: #f0f0f0;
             color: var(--neutral-800); -webkit-font-smoothing: antialiased;
-        }
-        
-        * {
-            font-family: inherit !important;
         }
         
         .calculator { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
@@ -39,7 +35,7 @@
         .instruction-text h3 { font-size: 1rem; font-weight: 600; color: var(--neutral-900); margin-bottom: 4px; }
         .instruction-text p { font-size: 0.9rem; color: var(--neutral-600); line-height: 1.4; }
         .bottom-note { text-align: center; font-size: 1rem; color: var(--primary); font-weight: 500; 
-                      padding: 16px 24px; background: rgba(0, 122, 255, 0.05); border-radius: 12px; border: 1px solid rgba(0, 122, 255, 0.1); }
+                      padding: 16px 24px; background: rgba(144, 212, 246, 0.05); border-radius: 12px; border: 1px solid rgba(144, 212, 246, 0.1); }
         
         /* Steps Grid - Side by Side */
         .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 60px; }
@@ -59,7 +55,7 @@
         .label { font-weight: 500; margin-bottom: 8px; color: var(--neutral-700); font-size: 0.95rem; }
         .input { padding: 16px; border: 2px solid var(--neutral-200); border-radius: 12px; font-size: 1rem;
                 background: var(--white); transition: all 0.2s; }
-        .input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1); }
+        .input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(144, 212, 246, 0.1); }
         .input:hover { border-color: var(--neutral-300); }
         
         .usage-display { background: linear-gradient(135deg, var(--neutral-100) 0%, var(--white) 100%);
@@ -83,9 +79,9 @@
         .slider { flex: 1; height: 6px; border-radius: 3px; background: var(--neutral-200); outline: none;
                  -webkit-appearance: none; appearance: none; cursor: pointer; min-width: 0; max-width: 100%; }
         .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%;
-                                       background: var(--primary); cursor: pointer; box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3); }
+                                       background: var(--primary); cursor: pointer; box-shadow: 0 2px 8px rgba(144, 212, 246, 0.3); }
         .slider::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); 
-                                   cursor: pointer; border: none; box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3); }
+                                   cursor: pointer; border: none; box-shadow: 0 2px 8px rgba(144, 212, 246, 0.3); }
         .slider-value { font-weight: 600; color: var(--primary); min-width: 50px; text-align: right; flex-shrink: 0; }
         
         .cups-display { font-size: 0.85rem; color: var(--neutral-600); text-align: center; margin-top: 4px; margin-bottom: 12px;
@@ -109,7 +105,7 @@
         .comparison-card { background: var(--white); border: 1px solid var(--neutral-200); border-radius: 16px;
                           padding: 24px; transition: all 0.3s; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .comparison-card:hover { border-color: var(--primary); transform: translateY(-2px); }
-        .comparison-card.instarinse { border-color: var(--primary); background: rgba(0, 122, 255, 0.02); }
+        .comparison-card.instarinse { border-color: var(--primary); background: rgba(144, 212, 246, 0.02); }
         
         .method-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; color: var(--neutral-900); }
         .method-cost { font-size: 2.2rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
@@ -125,7 +121,7 @@
         
         /* Results Section */
         .results-section { margin: 60px 0; }
-        .results-cards { background: linear-gradient(135deg, var(--primary) 0%, #0056b3 100%); 
+        .results-cards { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); 
                         border-radius: 24px; padding: 50px; margin-bottom: 40px; color: white; text-align: center; }
         .results-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 40px; }
         .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
@@ -342,7 +338,7 @@
                         </div>
                     </div>
                     <div class="instruction-item">
-                        <div class="instruction-number">⚙️</div>
+                        <div class="instruction-number">4</div>
                         <div class="instruction-text">
                             <h3>Customize Assumptions</h3>
                             <p>Click "Adjust Assumptions" to modify costs and environmental values for your specific situation</p>
@@ -567,7 +563,7 @@
                     </thead>
                     <tbody>
                         <tr class="expandable-row" onclick="toggleBreakdown('cost')">
-                            <td><strong>Annual Cost</strong><span class="expand-icon" id="costIcon">▼</span></td>
+                            <td><strong>Annual Cost</strong><span class="expand-icon" id="costIcon">v</span></td>
                             <td class="current-bad" id="currentCost">£25,000</td>
                             <td class="instarinse-good" id="newCost">£10,000</td>
                             <td class="savings" id="savingsCost">£15,000</td>
@@ -584,7 +580,7 @@
                             </td>
                         </tr>
                         <tr class="expandable-row" onclick="toggleBreakdown('water')">
-                            <td><strong>Water Usage</strong><span class="expand-icon" id="waterIcon">▼</span></td>
+                            <td><strong>Water Usage</strong><span class="expand-icon" id="waterIcon">v</span></td>
                             <td class="current-bad" id="currentWater">3,500,000L</td>
                             <td class="instarinse-good" id="newWater">250,000L</td>
                             <td class="savings" id="savingsWater">3,250,000L</td>
@@ -601,7 +597,7 @@
                             </td>
                         </tr>
                         <tr class="expandable-row" onclick="toggleBreakdown('co2')">
-                            <td><strong>CO₂ Emissions</strong><span class="expand-icon" id="co2Icon">▼</span></td>
+                            <td><strong>CO₂ Emissions</strong><span class="expand-icon" id="co2Icon">v</span></td>
                             <td class="current-bad" id="currentCo2">6,000kg</td>
                             <td class="instarinse-good" id="newCo2">1,500kg</td>
                             <td class="savings" id="savingsCo2">4,500kg</td>
@@ -618,7 +614,7 @@
                             </td>
                         </tr>
                         <tr class="expandable-row" onclick="toggleBreakdown('energy')">
-                            <td><strong>Energy Usage</strong><span class="expand-icon" id="energyIcon">▼</span></td>
+                            <td><strong>Energy Usage</strong><span class="expand-icon" id="energyIcon">v</span></td>
                             <td class="current-bad" id="currentEnergy">2,500 kWh</td>
                             <td class="instarinse-good" id="newEnergy">800 kWh</td>
                             <td class="savings" id="savingsEnergy">1,700 kWh</td>
@@ -985,7 +981,7 @@
                 els.currentHandwashCups.textContent = formatNumber((mix.handwash / 100) * dailyCups, 0) + ' cups/day';
                 els.currentDishwasherCups.textContent = formatNumber((mix.dishwasher / 100) * dailyCups, 0) + ' cups/day';
                 
-                els.currentValidation.textContent = total === 100 ? '✓ Perfect! Total: 100%' : `Total: ${total}% - adjust to 100%`;
+                els.currentValidation.textContent = total === 100 ? 'Perfect! Total: 100%' : `Total: ${total}% - adjust to 100%`;
                 els.currentValidation.className = total === 100 ? 'validation valid' : 'validation invalid';
             } else {
                 els.optimalPaperValue.textContent = mix.paper + '%';
@@ -999,7 +995,7 @@
                 els.optimalHandwashCups.textContent = formatNumber((mix.handwash / 100) * dailyCups, 0) + ' cups/day';
                 els.optimalDishwasherCups.textContent = formatNumber((mix.dishwasher / 100) * dailyCups, 0) + ' cups/day';
                 
-                els.optimalValidation.textContent = total === 100 ? '✓ Perfect! Total: 100%' : `Total: ${total}% - adjust to 100%`;
+                els.optimalValidation.textContent = total === 100 ? 'Perfect! Total: 100%' : `Total: ${total}% - adjust to 100%`;
                 els.optimalValidation.className = total === 100 ? 'validation valid' : 'validation invalid';
             }
             calculateSavings();
