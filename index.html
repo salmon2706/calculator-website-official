@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>instarinse® Savings Calculator</title>
+    <title>impactOS Saving Estimator</title>
     <style>
-        /* Premium Apple/Dyson Aesthetic */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
@@ -17,27 +16,28 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-            background: #f0f0f0;
-            color: var(--neutral-800); -webkit-font-smoothing: antialiased;
+            background: #f8f9fa;
+            color: var(--neutral-800); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
         }
         
         .calculator { max-width: 1400px; margin: 0 auto; padding: 40px 20px; }
         
-        /* Header */
         .header { text-align: center; margin-bottom: 60px; padding: 60px 20px; background: var(--white); border-radius: 24px; border: 1px solid var(--neutral-200); }
-        .title { font-size: 2.5rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 40px; letter-spacing: -0.02em; }
+        .title { font-size: 3rem; font-weight: 800; color: var(--neutral-900); margin-bottom: 50px; letter-spacing: -0.03em; }
         
         .instructions { max-width: 1000px; margin: 0 auto; }
-        .instruction-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; margin-bottom: 30px; }
-        .instruction-item { display: flex; align-items: flex-start; gap: 12px; }
-        .instruction-number { width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 50%;
-                            display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.9rem; flex-shrink: 0; }
-        .instruction-text h3 { font-size: 1rem; font-weight: 600; color: var(--neutral-900); margin-bottom: 4px; }
-        .instruction-text p { font-size: 0.9rem; color: var(--neutral-600); line-height: 1.4; }
-        .bottom-note { text-align: center; font-size: 1rem; color: var(--primary); font-weight: 500; 
-                      padding: 16px 24px; background: rgba(144, 212, 246, 0.05); border-radius: 12px; border: 1px solid rgba(144, 212, 246, 0.1); }
+        .instruction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-bottom: 30px; }
+        .instruction-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; }
+        .instruction-number { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--primary-hover)); 
+                            color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+                            font-weight: 700; font-size: 1rem; flex-shrink: 0; box-shadow: 0 4px 12px rgba(144, 212, 246, 0.25); }
+        .instruction-text h3 { font-size: 1.2rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 8px; }
+        .instruction-text p { font-size: 1rem; color: var(--neutral-500); line-height: 1.4; font-weight: 400; }
+        .bottom-note { text-align: center; font-size: 1rem; color: var(--primary); font-weight: 600; 
+                      padding: 20px 28px; background: linear-gradient(135deg, rgba(144, 212, 246, 0.08), rgba(144, 212, 246, 0.03)); 
+                      border-radius: 16px; border: 1px solid rgba(144, 212, 246, 0.15); 
+                      box-shadow: 0 2px 8px rgba(144, 212, 246, 0.1); }
         
-        /* Steps Grid - Side by Side */
         .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin-bottom: 60px; }
         
         .step { background: var(--white); border-radius: 20px; padding: 40px; 
@@ -48,7 +48,7 @@
         .step-header { display: flex; align-items: center; margin-bottom: 30px; }
         .step-number { width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%;
                       display: flex; align-items: center; justify-content: center; font-weight: 600; margin-right: 16px; }
-        .step-title { font-size: 1.25rem; font-weight: 600; color: var(--neutral-900); }
+        .step-title { font-size: 1.5rem; font-weight: 700; color: var(--neutral-900); }
         
         .input-grid { display: grid; gap: 20px; }
         .input-group { display: flex; flex-direction: column; }
@@ -63,7 +63,6 @@
         .usage-number { font-size: 2.5rem; font-weight: 700; color: var(--primary); }
         .usage-label { color: var(--neutral-600); margin-top: 4px; font-weight: 400; }
         
-        /* Sliders */
         .slider-grid { display: grid; gap: 16px; }
         .slider-row { display: flex; align-items: center; gap: 16px; padding: 16px; background: var(--neutral-50);
                      border-radius: 12px; transition: all 0.2s; min-width: 0; }
@@ -91,21 +90,28 @@
         .valid { background: rgba(48, 209, 88, 0.1); color: #1B7B3A; border: 1px solid rgba(48, 209, 88, 0.2); }
         .invalid { background: rgba(255, 105, 97, 0.1); color: #D1242F; border: 1px solid rgba(255, 105, 97, 0.2); }
         
-        /* Comparisons Section */
         .comparisons-section { background: var(--white); border-radius: 24px; padding: 50px; margin: 60px 0;
                               box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); border: 1px solid var(--neutral-200); }
         
         .comparisons-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .comparisons-title { font-size: 2rem; font-weight: 700; color: var(--neutral-900); }
+        .comparisons-title { font-size: 2.2rem; font-weight: 800; color: var(--neutral-900); letter-spacing: -0.01em; }
         .adjust-btn { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 12px;
                      font-weight: 500; cursor: pointer; transition: all 0.2s; }
         .adjust-btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
         
-        .comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .comparison-card.instarinse { grid-column: 2; margin-top: 24px; position: relative; overflow: hidden; }
         .comparison-card { background: var(--white); border: 1px solid var(--neutral-200); border-radius: 16px;
                           padding: 24px; transition: all 0.3s; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .comparison-card:hover { border-color: var(--primary); transform: translateY(-2px); }
-        .comparison-card.instarinse { border-color: var(--primary); background: rgba(144, 212, 246, 0.02); }
+        .comparison-card.instarinse { border-color: #22c55e; background: rgba(34, 197, 94, 0.02); 
+                                     border-width: 2px; box-shadow: 0 4px 20px rgba(34, 197, 94, 0.25), 0 0 0 1px rgba(34, 197, 94, 0.1); }
+        .comparison-card.instarinse::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; 
+                                            background: linear-gradient(90deg, #22c55e, #16a34a); }
+        .comparison-card.instarinse .method-name { color: #16a34a; font-weight: 700; }
+        .comparison-card.instarinse .method-cost { color: #16a34a; }
+        .comparison-card.instarinse:hover { border-color: #16a34a; transform: translateY(-3px); 
+                                          box-shadow: 0 8px 30px rgba(34, 197, 94, 0.35), 0 0 0 2px rgba(34, 197, 94, 0.15); }
         
         .method-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; color: var(--neutral-900); }
         .method-cost { font-size: 2.2rem; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
@@ -119,12 +125,11 @@
         
         .method-note { font-size: 0.85rem; color: var(--neutral-600); font-style: italic; margin-top: 12px; }
         
-        /* Results Section */
         .results-section { margin: 60px 0; }
         .results-cards { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); 
                         border-radius: 24px; padding: 50px; margin-bottom: 40px; color: white; text-align: center; }
-        .results-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 40px; }
-        .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .results-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 40px; letter-spacing: -0.02em; }
+        .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
         .result-card { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(20px);
                       padding: 30px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.2); }
         .result-value { font-size: 2.8rem; font-weight: 700; margin-bottom: 8px; }
@@ -132,7 +137,7 @@
         
         .breakdown-section { background: var(--white); border-radius: 20px; padding: 40px; 
                            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border: 1px solid var(--neutral-200); }
-        .breakdown-title { font-size: 1.75rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 30px; }
+        .breakdown-title { font-size: 2rem; font-weight: 800; color: var(--neutral-900); margin-bottom: 30px; letter-spacing: -0.01em; }
         
         .table { width: 100%; border-collapse: separate; border-spacing: 0; }
         .table th { background: var(--neutral-100); padding: 20px; font-weight: 600; color: var(--neutral-700);
@@ -144,9 +149,9 @@
         .table tr:last-child td:first-child { border-bottom-left-radius: 12px; }
         .table tr:last-child td:last-child { border-bottom-right-radius: 12px; }
         
-        .savings { color: var(--success); font-weight: 600; }
-        .current-bad { color: #FF6B6B; font-weight: 500; }
-        .instarinse-good { color: var(--success); font-weight: 600; }
+        .savings { color: var(--primary); font-weight: 600; }
+        .current-value { color: var(--neutral-700); font-weight: 500; }
+        .optimised-value { color: var(--neutral-900); font-weight: 600; }
         .expandable-row { cursor: pointer; transition: background-color 0.2s; }
         .expandable-row:hover { background: var(--neutral-100); }
         .expand-icon { margin-left: 8px; color: var(--neutral-600); transition: transform 0.3s; }
@@ -156,8 +161,61 @@
         .breakdown-details td { padding: 12px 20px; font-size: 0.9rem; color: var(--neutral-700); border-bottom: 1px solid var(--neutral-300); }
         .method-breakdown { display: flex; justify-content: space-between; margin: 4px 0; }
         
+        .impact-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin-top: 40px; }
         
-        /* Assumptions Modal */
+        @media (min-width: 1200px) {
+            .impact-cards { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+        }
+        .impact-card { background: var(--white); border-radius: 20px; padding: 30px; border: 2px solid var(--neutral-200); 
+                      box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: all 0.3s ease; cursor: pointer; position: relative; }
+        .impact-header { display: flex; align-items: center; margin-bottom: 20px; }
+        .impact-icon { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+                      font-size: 1.1rem; font-weight: 700; margin-right: 16px; }
+        .cost-icon { background: linear-gradient(135deg, #90d4f6, #7cc3f0); color: white; }
+        .water-icon { background: linear-gradient(135deg, #B8E6B8, #90D190); color: white; }
+        .carbon-icon { background: linear-gradient(135deg, #D4C5F9, #B8A9F9); color: white; }
+        .energy-icon { background: linear-gradient(135deg, #FFE5B8, #FFD190); color: white; }
+        .impact-title { font-size: 1.1rem; font-weight: 600; color: var(--neutral-900); }
+        .impact-comparison { display: flex; align-items: center; gap: 20px; margin: 20px 0; }
+        .comparison-value { text-align: center; flex: 1; }
+        .comparison-label { font-size: 0.85rem; color: var(--neutral-600); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .comparison-number { font-size: 1.8rem; font-weight: 700; }
+        .current-number { color: var(--neutral-700); }
+        .optimised-number { color: var(--neutral-900); }
+        .comparison-arrow { color: var(--primary); font-size: 1.5rem; font-weight: 700; }
+        .savings-highlight { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); 
+                           color: white; padding: 15px 20px; border-radius: 12px; text-align: center; margin-top: 15px; }
+        .savings-amount { font-size: 1.4rem; font-weight: 700; display: block; }
+        .savings-percent { font-size: 1rem; opacity: 0.9; font-weight: 700; }
+        
+        .impact-breakdown { margin-top: 20px; padding: 20px; background: var(--neutral-50); border-radius: 12px; 
+                           display: none; border-top: 1px solid var(--neutral-200); animation: slideDown 0.3s ease; }
+        .impact-breakdown.open { display: block; }
+        .breakdown-method { display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center; 
+                           margin: 12px 0; padding: 12px; background: var(--white); border-radius: 8px; 
+                           border: 1px solid var(--neutral-200); }
+        .breakdown-method:last-child { margin-bottom: 0; }
+        .method-name { font-weight: 600; color: var(--neutral-800); font-size: 0.95rem; }
+        .method-values { display: flex; align-items: center; gap: 12px; font-size: 0.9rem; }
+        .current-val { color: var(--neutral-600); font-weight: 500; }
+        .optimal-val { color: var(--neutral-900); font-weight: 600; }
+        .method-values span:nth-child(2) { color: var(--primary); font-weight: 600; }
+        
+        .expand-indicator { margin-left: 12px; color: var(--primary); font-size: 1rem; transition: transform 0.3s; 
+                           background: rgba(144, 212, 246, 0.15); padding: 6px 12px; border-radius: 50px; font-weight: 700; 
+                           border: 1px solid rgba(144, 212, 246, 0.2); }
+        .expand-indicator.rotated { transform: rotate(180deg); }
+        .expand-indicator.rotated::after { content: ' ↑'; }
+        .expand-indicator:not(.rotated)::after { content: ' ↓'; }
+        
+        .expand-indicator.rotated { background: rgba(144, 212, 246, 0.2); }
+        
+        
+        @keyframes slideDown { 
+            from { opacity: 0; transform: translateY(-10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
         .modal-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px);
                          z-index: 999; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
         .modal-backdrop.open { opacity: 1; visibility: visible; }
@@ -196,36 +254,40 @@
         
         .hidden { display: none !important; }
         
-        /* Mobile Responsive */
         @media (max-width: 1024px) and (min-width: 641px) {
             .calculator { padding: 20px; }
             .header { padding: 40px 20px; }
             .steps-grid { grid-template-columns: 1fr; gap: 20px; }
             .comparison-grid { grid-template-columns: repeat(2, 1fr); }
-            .results-grid { grid-template-columns: repeat(2, 1fr); }
-            .instruction-grid { grid-template-columns: repeat(2, 1fr); }
+            .comparison-card.instarinse { grid-column: 1 / -1; justify-self: center; max-width: 300px; }
+            .results-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .instruction-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
             
-            /* Fix table overflow on tablet - but keep desktop modal behavior */
             .table { font-size: 0.9rem; }
             .table th, .table td { padding: 12px 8px; }
+            
+            .impact-cards { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .expand-indicator { font-size: 0.85rem; padding: 4px 8px; }
         }
         
         @media (max-width: 640px) {
             .title { font-size: 2rem; }
             .header { padding: 30px 15px; }
-            .instruction-grid { grid-template-columns: 1fr; }
+            .instruction-grid { grid-template-columns: 1fr; gap: 20px; }
             .comparison-grid { grid-template-columns: 1fr; }
-            .results-grid { grid-template-columns: 1fr; }
+            .comparison-card.instarinse { grid-column: 1; max-width: none; }
+            .results-grid { grid-template-columns: 1fr; gap: 20px; }
             .instruction-text h3 { font-size: 0.95rem; }
             .instruction-text p { font-size: 0.85rem; }
             
-            /* Fix slider overflow on mobile */
             .slider-row { gap: 12px; padding: 12px; flex-wrap: nowrap; }
             .slider-label { min-width: 80px; font-size: 0.9rem; }
             .slider-value { min-width: 45px; font-size: 0.9rem; }
             .step { padding: 20px; }
             
-            /* Fix assumptions modal on mobile */
+            .comparisons-header { flex-direction: column; gap: 20px; text-align: center; }
+            .adjust-btn { padding: 10px 20px; font-size: 0.9rem; width: auto; min-width: 160px; }
+            
             .assumptions-modal { 
                 width: 100vw; 
                 right: -100vw; 
@@ -271,7 +333,6 @@
                 transform: scale(0.95);
             }
             
-            /* Fix table overflow on mobile */
             .table-container { 
                 overflow-x: auto; 
                 -webkit-overflow-scrolling: touch; 
@@ -285,7 +346,6 @@
             .method-breakdown { flex-direction: column; gap: 8px; }
             .method-breakdown span { font-size: 0.8rem; display: block; }
             
-            /* Add scroll indicator for table */
             .table-container::after {
                 content: '← Scroll for more →';
                 position: absolute;
@@ -297,70 +357,77 @@
                 pointer-events: none;
             }
             
-            /* Ensure everything fits on mobile */
             .calculator { padding: 15px; }
             .comparisons-section { padding: 30px 20px; margin: 40px 0; }
             .breakdown-section { padding: 30px 20px; position: relative; }
             .results-cards { padding: 40px 20px; }
             
-            /* Fix validation messages on mobile */
             .validation { padding: 10px 16px; font-size: 0.9rem; }
             .cups-display { font-size: 0.8rem; padding: 3px 6px; }
+            
+            .impact-cards { grid-template-columns: 1fr; gap: 20px; }
+            .impact-card { padding: 20px; }
+            .impact-comparison { flex-direction: column; gap: 15px; text-align: center; }
+            .comparison-arrow { transform: rotate(90deg); }
+            .comparison-number { font-size: 1.5rem; }
+            .savings-highlight { padding: 12px 16px; }
+            .savings-amount { font-size: 1.2rem; }
+            .impact-breakdown { padding: 15px; }
+            .breakdown-method { grid-template-columns: 1fr; gap: 8px; text-align: center; padding: 10px; }
+            .method-values { justify-content: center; gap: 10px; flex-wrap: wrap; }
+            .expand-indicator { font-size: 0.9rem; padding: 4px 8px; }
         }
     </style>
 </head>
 <body>
     <div class="calculator">
-        <!-- Instructions Header -->
         <header class="header">
-            <h1 class="title">Calculate Your Savings</h1>
+            <h1 class="title">Discover Your Impact</h1>
             <div class="instructions">
                 <div class="instruction-grid">
                     <div class="instruction-item">
                         <div class="instruction-number">1</div>
                         <div class="instruction-text">
-                            <h3>Enter Your Details</h3>
-                            <p>Tell us about your venue - how many people, operating days, and daily cup usage</p>
+                            <h3>Your Site</h3>
+                            <p>Site users, days, and cup usage</p>
                         </div>
                     </div>
                     <div class="instruction-item">
                         <div class="instruction-number">2</div>
                         <div class="instruction-text">
-                            <h3>Set Your Current Mix</h3>
-                            <p>Use the sliders to show how you currently handle cup cleaning (must total 100%)</p>
+                            <h3>Current Mix</h3>
+                            <p>How you clean cups today</p>
                         </div>
                     </div>
                     <div class="instruction-item">
                         <div class="instruction-number">3</div>
                         <div class="instruction-text">
-                            <h3>Configure Optimal Mix</h3>
-                            <p>Adjust the sliders to include instarinse® in your workflow (must total 100%)</p>
+                            <h3>With instarinse®</h3>
+                            <p>Your optimised workflow</p>
                         </div>
                     </div>
                     <div class="instruction-item">
                         <div class="instruction-number">4</div>
                         <div class="instruction-text">
-                            <h3>Customize Assumptions</h3>
-                            <p>Click "Adjust Assumptions" to modify costs and environmental values for your specific situation</p>
+                            <h3>Fine-tune</h3>
+                            <p>Adjust costs and assumptions</p>
                         </div>
                     </div>
                 </div>
-                <p class="bottom-note">Results appear instantly when both mixes total exactly 100%</p>
+                <p class="bottom-note">Results appear when both mixes total 100%</p>
             </div>
         </header>
 
-        <!-- Three Steps Side by Side -->
         <section class="steps-grid">
-            <!-- Step 1: Workplace -->
             <div class="step">
                 <div class="step-header">
                     <div class="step-number">1</div>
-                    <h2 class="step-title">Your Venue Details</h2>
+                    <h2 class="step-title">Your Site</h2>
                 </div>
                 
                 <div class="input-grid">
                     <div class="input-group">
-                        <label class="label" for="teamSize">People/Students/Members</label>
+                        <label class="label" for="teamSize">Site Users</label>
                         <input type="number" id="teamSize" class="input" value="100" min="10" max="50000">
                     </div>
                     
@@ -381,11 +448,10 @@
                 </div>
             </div>
 
-            <!-- Step 2: Current Mix -->
             <div class="step">
                 <div class="step-header">
                     <div class="step-number">2</div>
-                    <h2 class="step-title">Current Cleaning Mix</h2>
+                    <h2 class="step-title">Current Mix</h2>
                 </div>
                 
                 <div class="slider-grid">
@@ -417,7 +483,6 @@
                 <div class="validation" id="currentValidation">Adjust to total 100%</div>
             </div>
 
-            <!-- Step 3: Optimal Mix -->
             <div class="step">
                 <div class="step-header">
                     <div class="step-number">3</div>
@@ -462,22 +527,21 @@
             </div>
         </section>
 
-        <!-- Per-Cup Comparisons -->
         <section class="comparisons-section">
             <div class="comparisons-header">
-                <h2 class="comparisons-title">Environmental Impact per Cup</h2>
+                <h2 class="comparisons-title">The Numbers</h2>
                 <button class="adjust-btn" onclick="openAssumptions()">Adjust Assumptions</button>
             </div>
             
             <div class="comparison-grid">
                 <div class="comparison-card">
                     <div class="method-name">Paper Cup</div>
-                    <div class="method-cost">£<span id="paperCostDisplay">0.150</span> <small>(per cup)</small></div>
+                    <div class="method-cost"><span id="paperCostDisplay">15</span>p <small>(per cup)</small></div>
                     <div class="details-grid">
-                        <div class="detail-item"><span class="detail-label">Cost <span class="per-text">(per cup)</span></span> <span class="detail-value">£<span id="paperCostOnly">0.150</span></span></div>
+                        <div class="detail-item"><span class="detail-label">Cost <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="paperCostOnly">15</span>p</span></div>
                         <div class="detail-item"><span class="detail-label">Water <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="paperWaterOnly">0.25</span>L</span></div>
-                        <div class="detail-item"><span class="detail-label">CO₂ <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="paperCo2Only">12</span>g</span></div>
-                        <div class="detail-item"><span class="detail-label">Energy <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="paperEnergyOnly">60</span>Wh</span></div>
+                        <div class="detail-item"><span class="detail-label">CO₂ <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="paperCo2Only">10</span>g</span></div>
+                        <div class="detail-item"><span class="detail-label">Energy <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="paperEnergyOnly">0.06</span>kWh</span></div>
                         <div class="detail-item"><span class="detail-label">Labour <span class="per-text">(per cup)</span></span> <span class="detail-value">0 sec</span></div>
                     </div>
                     <div class="method-note">Manufacturing + disposal costs</div>
@@ -485,12 +549,12 @@
                 
                 <div class="comparison-card">
                     <div class="method-name">Hand Washing</div>
-                    <div class="method-cost">£<span id="handwashCostDisplay">0.030</span> <small>(per cup)</small></div>
+                    <div class="method-cost"><span id="handwashCostDisplay">3</span>p <small>(per cup)</small></div>
                     <div class="details-grid">
-                        <div class="detail-item"><span class="detail-label">Detergent <span class="per-text">(per cup)</span></span> <span class="detail-value">£<span id="handwashDetergentOnly">0.010</span></span></div>
+                        <div class="detail-item"><span class="detail-label">Detergent <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="handwashDetergentOnly">1</span>p</span></div>
                         <div class="detail-item"><span class="detail-label">Water <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="handwashWaterOnly">1.0</span>L</span></div>
                         <div class="detail-item"><span class="detail-label">CO₂ <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="handwashCo2Only">20</span>g</span></div>
-                        <div class="detail-item"><span class="detail-label">Energy <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="handwashEnergyOnly">80</span>Wh</span></div>
+                        <div class="detail-item"><span class="detail-label">Energy <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="handwashEnergyOnly">0.08</span>kWh</span></div>
                         <div class="detail-item"><span class="detail-label">Labour <span class="per-text">(per cup)</span></span> <span class="detail-value">0 sec</span></div>
                     </div>
                     <div class="method-note">Self-service (no labour cost)</div>
@@ -498,25 +562,25 @@
                 
                 <div class="comparison-card">
                     <div class="method-name">Dishwasher</div>
-                    <div class="method-cost">£<span id="dishwasherCostDisplay">0.060</span> <small>(per cup)</small></div>
+                    <div class="method-cost"><span id="dishwasherCostDisplay">6</span>p <small>(per cup)</small></div>
                     <div class="details-grid">
                         <div class="detail-item"><span class="detail-label">Total cost <span class="per-text">(per load)</span></span> <span class="detail-value">£<span id="dishwasherLoadCost">2.40</span></span></div>
                         <div class="detail-item"><span class="detail-label">Water <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="dishwasherWaterOnly">0.33</span>L</span></div>
                         <div class="detail-item"><span class="detail-label">CO₂ <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="dishwasherCo2Only">4</span>g</span></div>
-                        <div class="detail-item"><span class="detail-label">Energy <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="dishwasherEnergyOnly">22.5</span>Wh</span></div>
+                        <div class="detail-item"><span class="detail-label">Energy <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="dishwasherEnergyOnly">0.02</span>kWh</span></div>
                         <div class="detail-item"><span class="detail-label">Labour time <span class="per-text">(per load)</span></span> <span class="detail-value"><span id="dishwasherLabourTime">10</span> min</span></div>
                     </div>
-                    <div class="method-note">40 cups per load • Includes loading/unloading</div>
+                    <div class="method-note"><span id="dishwasherCapacityNote">40</span> cups per load • Includes loading/unloading</div>
                 </div>
                 
                 <div class="comparison-card instarinse">
                     <div class="method-name">instarinse®</div>
-                    <div class="method-cost">£<span id="instarinseCostDisplay">0.012</span> <small>(per cup)</small></div>
+                    <div class="method-cost"><span id="instarinseCostDisplay">1.2</span>p <small>(per cup)</small></div>
                     <div class="details-grid">
-                        <div class="detail-item"><span class="detail-label">Operation cost <span class="per-text">(per cup)</span></span> <span class="detail-value">£<span id="instarinseOpOnly">0.012</span></span></div>
+                        <div class="detail-item"><span class="detail-label">Operation cost <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="instarinseOpOnly">1.2</span>p</span></div>
                         <div class="detail-item"><span class="detail-label">Water <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="instarinseWaterOnly">50</span>ml</span></div>
-                        <div class="detail-item"><span class="detail-label">CO₂ <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="instarinseCo2Only">2</span>g</span></div>
-                        <div class="detail-item"><span class="detail-label">Energy <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="instarinseEnergyOnly">8</span>Wh</span></div>
+                        <div class="detail-item"><span class="detail-label">CO₂ <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="instarinseCo2Only">0</span>g</span></div>
+                        <div class="detail-item"><span class="detail-label">Energy <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="instarinseEnergyOnly">0.01</span>kWh</span></div>
                         <div class="detail-item"><span class="detail-label">Maintenance <span class="per-text">(per 100 cups)</span></span> <span class="detail-value"><span id="instarinseLabourTime">5</span> min</span></div>
                     </div>
                     <div class="method-note">Maintenance includes tank changes & daily cleaning</div>
@@ -524,122 +588,272 @@
             </div>
         </section>
 
-        <!-- Results -->
         <section class="results-section" id="resultsSection">
             <div class="results-cards">
-                <h2 class="results-title">Your Annual Savings</h2>
+                <h2 class="results-title">Your Impact</h2>
                 <div class="results-grid">
                     <div class="result-card">
                         <div class="result-value" id="costSavings">£15,000</div>
-                        <div class="result-label">Money Back in Your Pocket</div>
+                        <div class="result-label">Cost Savings</div>
                     </div>
                     <div class="result-card">
                         <div class="result-value" id="waterSaved">3,250,000</div>
-                        <div class="result-label">Litres Water Conserved</div>
+                        <div class="result-label">Water Conserved</div>
                     </div>
                     <div class="result-card">
                         <div class="result-value" id="co2Saved">4,500</div>
-                        <div class="result-label">kg CO₂ Emissions Prevented</div>
+                        <div class="result-label">CO₂ Eliminated</div>
                     </div>
                     <div class="result-card">
                         <div class="result-value" id="timeSaved">1,700</div>
-                        <div class="result-label">kWh Energy Efficiency Gain</div>
+                        <div class="result-label">Energy Saved</div>
                     </div>
                 </div>
             </div>
             
             <div class="breakdown-section" id="breakdownSection">
-                <h3 class="breakdown-title">Annual Impact Breakdown</h3>
-                <div class="table-container">
-                    <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Metric</th>
-                            <th>Current Mix</th>
-                            <th>With instarinse®</th>
-                            <th>Difference</th>
-                            <th>% Saved</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="expandable-row" onclick="toggleBreakdown('cost')">
-                            <td><strong>Annual Cost</strong><span class="expand-icon" id="costIcon">v</span></td>
-                            <td class="current-bad" id="currentCost">£25,000</td>
-                            <td class="instarinse-good" id="newCost">£10,000</td>
-                            <td class="savings" id="savingsCost">£15,000</td>
-                            <td class="savings" id="savingsPercent">60%</td>
-                        </tr>
-                        <tr class="breakdown-details" id="costBreakdown">
-                            <td colspan="5">
-                                <div class="method-breakdown">
-                                    <span>Paper cups: <span id="currentPaperCost">£8,000</span> → <span id="optimalPaperCost">£400</span></span>
-                                    <span>Hand washing: <span id="currentHandwashCost">£600</span> → <span id="optimalHandwashCost">£150</span></span>
-                                    <span>Dishwasher: <span id="currentDishwasherCost">£16,400</span> → <span id="optimalDishwasherCost">£4,920</span></span>
-                                    <span>instarinse®: <span>£0</span> → <span id="optimalInstarinseCost">£4,980</span></span>
+                <h3 class="breakdown-title">The Details</h3>
+                <p style="text-align: center; color: var(--neutral-600); margin-bottom: 30px; font-size: 1rem;">Click any card to see detailed breakdown by cleaning method</p>
+                
+                <div class="impact-cards">
+                    <div class="impact-card" onclick="toggleImpactBreakdown('cost')">
+                        <div class="impact-header">
+                            <div class="impact-icon cost-icon">£</div>
+                            <div class="impact-title">Annual Cost <span class="expand-indicator" id="costIndicator">expand</span></div>
                                 </div>
-                            </td>
-                        </tr>
-                        <tr class="expandable-row" onclick="toggleBreakdown('water')">
-                            <td><strong>Water Usage</strong><span class="expand-icon" id="waterIcon">v</span></td>
-                            <td class="current-bad" id="currentWater">3,500,000L</td>
-                            <td class="instarinse-good" id="newWater">250,000L</td>
-                            <td class="savings" id="savingsWater">3,250,000L</td>
-                            <td class="savings" id="waterPercent">93%</td>
-                        </tr>
-                        <tr class="breakdown-details" id="waterBreakdown">
-                            <td colspan="5">
-                                <div class="method-breakdown">
-                                    <span>Paper cups: <span id="currentPaperWater">7,500L</span> → <span id="optimalPaperWater">1,250L</span></span>
-                                    <span>Hand washing: <span id="currentHandwashWater">20,000L</span> → <span id="optimalHandwashWater">10,000L</span></span>
-                                    <span>Dishwasher: <span id="currentDishwasherWater">330,000L</span> → <span id="optimalDishwasherWater">99,000L</span></span>
-                                    <span>instarinse®: <span>0L</span> → <span id="optimalInstarinseWater">175,000L</span></span>
+                        <div class="impact-comparison">
+                            <div class="comparison-value">
+                                <div class="comparison-label">Current</div>
+                                <div class="comparison-number current-number" id="currentCost">£25,000</div>
                                 </div>
-                            </td>
-                        </tr>
-                        <tr class="expandable-row" onclick="toggleBreakdown('co2')">
-                            <td><strong>CO₂ Emissions</strong><span class="expand-icon" id="co2Icon">v</span></td>
-                            <td class="current-bad" id="currentCo2">6,000kg</td>
-                            <td class="instarinse-good" id="newCo2">1,500kg</td>
-                            <td class="savings" id="savingsCo2">4,500kg</td>
-                            <td class="savings" id="co2Percent">75%</td>
-                        </tr>
-                        <tr class="breakdown-details" id="co2Breakdown">
-                            <td colspan="5">
-                                <div class="method-breakdown">
-                                    <span>Paper cups: <span id="currentPaperCo2">360kg</span> → <span id="optimalPaperCo2">60kg</span></span>
-                                    <span>Hand washing: <span id="currentHandwashCo2">400kg</span> → <span id="optimalHandwashCo2">200kg</span></span>
-                                    <span>Dishwasher: <span id="currentDishwasherCo2">200kg</span> → <span id="optimalDishwasherCo2">60kg</span></span>
-                                    <span>instarinse®: <span>0kg</span> → <span id="optimalInstarinseCo2">140kg</span></span>
+                            <div class="comparison-arrow">→</div>
+                            <div class="comparison-value">
+                                <div class="comparison-label">With instarinse®</div>
+                                <div class="comparison-number optimised-number" id="newCost">£10,000</div>
                                 </div>
-                            </td>
-                        </tr>
-                        <tr class="expandable-row" onclick="toggleBreakdown('energy')">
-                            <td><strong>Energy Usage</strong><span class="expand-icon" id="energyIcon">v</span></td>
-                            <td class="current-bad" id="currentEnergy">2,500 kWh</td>
-                            <td class="instarinse-good" id="newEnergy">800 kWh</td>
-                            <td class="savings" id="savingsEnergy">1,700 kWh</td>
-                            <td class="savings" id="energyPercent">68%</td>
-                        </tr>
-                        <tr class="breakdown-details" id="energyBreakdown">
-                            <td colspan="5">
-                                <div class="method-breakdown">
-                                    <span>Paper cups: <span id="currentPaperEnergy">1,800 kWh</span> → <span id="optimalPaperEnergy">300 kWh</span></span>
-                                    <span>Hand washing: <span id="currentHandwashEnergy">1,600 kWh</span> → <span id="optimalHandwashEnergy">800 kWh</span></span>
-                                    <span>Dishwasher: <span id="currentDishwasherEnergy">225 kWh</span> → <span id="optimalDishwasherEnergy">67.5 kWh</span></span>
-                                    <span>instarinse®: <span>0 kWh</span> → <span id="optimalInstarinseEnergy">560 kWh</span></span>
                                 </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                        <div class="savings-highlight">
+                            <span class="savings-amount" id="savingsCost">£15,000</span>
+                            <span class="savings-percent">saved (<span id="savingsPercent">60%</span>)</span>
+                        </div>
+                        <div class="impact-breakdown" id="costBreakdownImpact">
+                            <div class="breakdown-method">
+                                <span class="method-name">Paper cups</span>
+                                <div class="method-values">
+                                    <span class="current-val" id="currentPaperCostBreakdown">£8,000</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalPaperCostBreakdown">£400</span>
+                                </div>
+                            </div>
+                            <div class="breakdown-method">
+                                <span class="method-name">Hand washing</span>
+                                <div class="method-values">
+                                    <span class="current-val" id="currentHandwashCostBreakdown">£600</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalHandwashCostBreakdown">£150</span>
+                                </div>
+                            </div>
+                            <div class="breakdown-method">
+                                <span class="method-name">Dishwasher</span>
+                                <div class="method-values">
+                                    <span class="current-val" id="currentDishwasherCostBreakdown">£16,400</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalDishwasherCostBreakdown">£4,920</span>
+                                </div>
+                            </div>
+                            <div class="breakdown-method">
+                                <span class="method-name">instarinse®</span>
+                                <div class="method-values">
+                                    <span class="current-val">£0</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalInstarinseCostBreakdown">£4,980</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="impact-card" onclick="toggleImpactBreakdown('water')">
+                        <div class="impact-header">
+                            <div class="impact-icon water-icon">H₂O</div>
+                            <div class="impact-title">Water Usage <span class="expand-indicator" id="waterIndicator">expand</span></div>
+                        </div>
+                        <div class="impact-comparison">
+                            <div class="comparison-value">
+                                <div class="comparison-label">Current</div>
+                                <div class="comparison-number current-number" id="currentWater">3,500,000L</div>
+                            </div>
+                            <div class="comparison-arrow">→</div>
+                            <div class="comparison-value">
+                                <div class="comparison-label">With instarinse®</div>
+                                <div class="comparison-number optimised-number" id="newWater">250,000L</div>
+                            </div>
+                        </div>
+                        <div class="savings-highlight">
+                            <span class="savings-amount" id="savingsWater">3,250,000L</span>
+                            <span class="savings-percent">saved (<span id="waterPercent">93%</span>)</span>
+                        </div>
+                        <div class="impact-breakdown" id="waterBreakdownImpact">
+                            <div class="breakdown-method">
+                                <span class="method-name">Paper cups</span>
+                                <div class="method-values">
+                                    <span class="current-val" id="currentPaperWaterBreakdown">7,500L</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalPaperWaterBreakdown">1,250L</span>
+                                </div>
+                            </div>
+                            <div class="breakdown-method">
+                                <span class="method-name">Hand washing</span>
+                                <div class="method-values">
+                                    <span class="current-val" id="currentHandwashWaterBreakdown">20,000L</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalHandwashWaterBreakdown">10,000L</span>
+                                </div>
+                            </div>
+                            <div class="breakdown-method">
+                                <span class="method-name">Dishwasher</span>
+                                <div class="method-values">
+                                    <span class="current-val" id="currentDishwasherWaterBreakdown">330,000L</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalDishwasherWaterBreakdown">99,000L</span>
+                                </div>
+                            </div>
+                            <div class="breakdown-method">
+                                <span class="method-name">instarinse®</span>
+                                <div class="method-values">
+                                    <span class="current-val">0L</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalInstarinseWaterBreakdown">175,000L</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="impact-card" onclick="toggleImpactBreakdown('co2')">
+                        <div class="impact-header">
+                            <div class="impact-icon carbon-icon">CO₂</div>
+                            <div class="impact-title">Carbon Emissions <span class="expand-indicator" id="co2Indicator">expand</span></div>
+                        </div>
+                        <div class="impact-comparison">
+                            <div class="comparison-value">
+                                <div class="comparison-label">Current</div>
+                                <div class="comparison-number current-number" id="currentCo2">6,000kg</div>
+                            </div>
+                            <div class="comparison-arrow">→</div>
+                            <div class="comparison-value">
+                                <div class="comparison-label">With instarinse®</div>
+                                <div class="comparison-number optimised-number" id="newCo2">1,500kg</div>
+                            </div>
+                        </div>
+                        <div class="savings-highlight">
+                            <span class="savings-amount" id="savingsCo2">4,500kg</span>
+                            <span class="savings-percent">saved (<span id="co2Percent">75%</span>)</span>
+                        </div>
+                        <div class="impact-breakdown" id="co2BreakdownImpact">
+                            <div class="breakdown-method">
+                                <span class="method-name">Paper cups</span>
+                                <div class="method-values">
+                                    <span class="current-val" id="currentPaperCo2Breakdown">360kg</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalPaperCo2Breakdown">60kg</span>
+                                </div>
+                            </div>
+                            <div class="breakdown-method">
+                                <span class="method-name">Hand washing</span>
+                                <div class="method-values">
+                                    <span class="current-val" id="currentHandwashCo2Breakdown">400kg</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalHandwashCo2Breakdown">200kg</span>
+                                </div>
+                            </div>
+                            <div class="breakdown-method">
+                                <span class="method-name">Dishwasher</span>
+                                <div class="method-values">
+                                    <span class="current-val" id="currentDishwasherCo2Breakdown">200kg</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalDishwasherCo2Breakdown">60kg</span>
+                                </div>
+                            </div>
+                            <div class="breakdown-method">
+                                <span class="method-name">instarinse®</span>
+                                <div class="method-values">
+                                    <span class="current-val">0kg</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalInstarinseCo2Breakdown">140kg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="impact-card" onclick="toggleImpactBreakdown('energy')">
+                        <div class="impact-header">
+                            <div class="impact-icon energy-icon">kWh</div>
+                            <div class="impact-title">Energy Usage <span class="expand-indicator" id="energyIndicator">expand</span></div>
+                        </div>
+                        <div class="impact-comparison">
+                            <div class="comparison-value">
+                                <div class="comparison-label">Current</div>
+                                <div class="comparison-number current-number" id="currentEnergy">2,500 kWh</div>
+                            </div>
+                            <div class="comparison-arrow">→</div>
+                            <div class="comparison-value">
+                                <div class="comparison-label">With instarinse®</div>
+                                <div class="comparison-number optimised-number" id="newEnergy">800 kWh</div>
+                            </div>
+                        </div>
+                        <div class="savings-highlight">
+                            <span class="savings-amount" id="savingsEnergy">1,700 kWh</span>
+                            <span class="savings-percent">saved (<span id="energyPercent">68%</span>)</span>
+                        </div>
+                        <div class="impact-breakdown" id="energyBreakdownImpact">
+                            <div class="breakdown-method">
+                                <span class="method-name">Paper cups</span>
+                                <div class="method-values">
+                                    <span class="current-val" id="currentPaperEnergyBreakdown">1,800 kWh</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalPaperEnergyBreakdown">300 kWh</span>
+                                </div>
+                            </div>
+                            <div class="breakdown-method">
+                                <span class="method-name">Hand washing</span>
+                                <div class="method-values">
+                                    <span class="current-val" id="currentHandwashEnergyBreakdown">1,600 kWh</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalHandwashEnergyBreakdown">800 kWh</span>
+                                </div>
+                            </div>
+                            <div class="breakdown-method">
+                                <span class="method-name">Dishwasher</span>
+                                <div class="method-values">
+                                    <span class="current-val" id="currentDishwasherEnergyBreakdown">225 kWh</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalDishwasherEnergyBreakdown">67.5 kWh</span>
+                                </div>
+                            </div>
+                            <div class="breakdown-method">
+                                <span class="method-name">instarinse®</span>
+                                <div class="method-values">
+                                    <span class="current-val">0 kWh</span>
+                                    <span>→</span>
+                                    <span class="optimal-val" id="optimalInstarinseEnergyBreakdown">560 kWh</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </section>
+
+        <section style="background: var(--white); border-radius: 20px; padding: 40px; margin: 60px 0; text-align: center; border: 1px solid var(--neutral-200); box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 16px;">Export Detailed Report</h3>
+            <p style="color: var(--neutral-600); margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">Download a comprehensive Excel report containing all site details, cleaning mixes, assumptions, calculations, and results for your records.</p>
+            <button onclick="exportToExcel()" style="background: var(--success); color: white; border: none; padding: 16px 32px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.2s; box-shadow: 0 2px 8px rgba(48, 209, 88, 0.2);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(48, 209, 88, 0.3)'" onmouseout="this.style.transform=''; this.style.boxShadow='0 2px 8px rgba(48, 209, 88, 0.2)'">
+                Export to Excel
+            </button>
         </section>
 
         
     </div>
 
-    <!-- Assumptions Modal -->
     <div class="modal-backdrop" id="modalBackdrop"></div>
     <div class="assumptions-modal" id="assumptionsModal">
         <div class="modal-header">
@@ -660,7 +874,7 @@
                             <svg viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/></svg>
                         </button>
                     </div>
-                    <div class="assumption-source"><a href="#" class="source-link">WRAP UK Report (2025)</a></div>
+                    <div class="assumption-source"><a href="https://www.wrap.ngo/uk" class="source-link" target="_blank">WRAP UK</a></div>
                 </div>
                 <div class="assumption-item">
                     <label class="assumption-label">Manufacturing Water</label>
@@ -671,7 +885,7 @@
                             <svg viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/></svg>
                         </button>
                     </div>
-                    <div class="assumption-source"><a href="#" class="source-link">EPA Manufacturing Data</a></div>
+                    <div class="assumption-source"><a href="https://www.epa.gov/sustainable-management-food/wasted-food-scale" class="source-link" target="_blank">EPA Sustainability Data</a></div>
                 </div>
                 <div class="assumption-item">
                     <label class="assumption-label">Manufacturing Energy</label>
@@ -682,18 +896,18 @@
                             <svg viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/></svg>
                         </button>
                     </div>
-                    <div class="assumption-source"><a href="#" class="source-link">LCA Study</a></div>
+                    <div class="assumption-source"><a href="https://www.ellenmacarthurfoundation.org/topics/circular-economy-introduction/overview" class="source-link" target="_blank">Life Cycle Assessment Data</a></div>
                 </div>
                 <div class="assumption-item">
                     <label class="assumption-label">Manufacturing CO₂</label>
                     <div class="assumption-row">
-                        <input type="number" id="paperCupCo2" value="0.012" step="0.001" min="0" max="0.05" class="assumption-input" onchange="updateCalculations()">
+                        <input type="number" id="paperCupCo2" value="0.01" step="0.01" min="0" max="0.05" class="assumption-input" onchange="updateCalculations()">
                         <span class="assumption-unit">kg/cup</span>
-                        <button class="reset-btn" onclick="resetAssumption('paperCupCo2', 0.012)">
+                        <button class="reset-btn" onclick="resetAssumption('paperCupCo2', 0.01)">
                             <svg viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/></svg>
                         </button>
                     </div>
-                    <div class="assumption-source"><a href="#" class="source-link">Carbon Footprint Calculator</a></div>
+                    <div class="assumption-source"><a href="https://www.eea.europa.eu/en" class="source-link" target="_blank">European Environment Agency</a></div>
                 </div>
             </div>
             
@@ -708,7 +922,7 @@
                             <svg viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/></svg>
                         </button>
                     </div>
-                    <div class="assumption-source"><a href="#" class="source-link">Waterwise UK</a></div>
+                    <div class="assumption-source"><a href="https://waterwise.org.uk" class="source-link" target="_blank">Waterwise UK</a></div>
                 </div>
                 <div class="assumption-item">
                     <label class="assumption-label">Energy per Wash</label>
@@ -719,12 +933,12 @@
                             <svg viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/></svg>
                         </button>
                     </div>
-                    <div class="assumption-source"><a href="#" class="source-link">UK Energy Data</a></div>
+                    <div class="assumption-source"><a href="https://www.gov.uk/government/statistics/energy-consumption-in-the-uk-2023" class="source-link" target="_blank">UK Government Energy Data</a></div>
                 </div>
                 <div class="assumption-item">
                     <label class="assumption-label">Detergent Cost</label>
                     <div class="assumption-row">
-                        <input type="number" id="handwashDetergent" value="0.01" step="0.001" min="0" max="0.1" class="assumption-input" onchange="updateCalculations()">
+                        <input type="number" id="handwashDetergent" value="0.01" step="0.01" min="0" max="0.1" class="assumption-input" onchange="updateCalculations()">
                         <span class="assumption-unit">£/cup</span>
                         <button class="reset-btn" onclick="resetAssumption('handwashDetergent', 0.01)">
                             <svg viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/></svg>
@@ -735,13 +949,13 @@
                 <div class="assumption-item">
                     <label class="assumption-label">CO₂ Emissions</label>
                     <div class="assumption-row">
-                        <input type="number" id="handwashCo2" value="0.02" step="0.005" min="0" max="0.1" class="assumption-input" onchange="updateCalculations()">
+                        <input type="number" id="handwashCo2" value="0.02" step="0.01" min="0" max="0.1" class="assumption-input" onchange="updateCalculations()">
                         <span class="assumption-unit">kg/cup</span>
                         <button class="reset-btn" onclick="resetAssumption('handwashCo2', 0.02)">
                             <svg viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/></svg>
                         </button>
                     </div>
-                    <div class="assumption-source"><a href="#" class="source-link">Environmental Studies</a></div>
+                    <div class="assumption-source"><a href="https://www.eea.europa.eu/en" class="source-link" target="_blank">European Environment Agency</a></div>
                 </div>
             </div>
             
@@ -776,7 +990,7 @@
                             <svg viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/></svg>
                         </button>
                     </div>
-                    <div class="assumption-source"><a href="#" class="source-link">Energy Star</a></div>
+                    <div class="assumption-source"><a href="https://www.energystar.gov" class="source-link" target="_blank">Energy Star</a></div>
                 </div>
                 <div class="assumption-item">
                     <label class="assumption-label">CO₂ per Load</label>
@@ -787,7 +1001,7 @@
                             <svg viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/></svg>
                         </button>
                     </div>
-                    <div class="assumption-source"><a href="#" class="source-link">Environmental Data</a></div>
+                    <div class="assumption-source"><a href="https://www.eea.europa.eu/en" class="source-link" target="_blank">European Environment Agency</a></div>
                 </div>
                 <div class="assumption-item">
                     <label class="assumption-label">Detergent per Load</label>
@@ -798,7 +1012,7 @@
                             <svg viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/></svg>
                         </button>
                     </div>
-                    <div class="assumption-source">Commercial rates</div>
+                    <div class="assumption-source">Industry research</div>
                 </div>
             </div>
             
@@ -813,7 +1027,7 @@
                             <svg viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/></svg>
                         </button>
                     </div>
-                    <div class="assumption-source"><a href="#" class="source-link">UK Energy Price Cap</a></div>
+                    <div class="assumption-source"><a href="https://www.ofgem.gov.uk/information-consumers/energy-advice-households/energy-price-cap-explained" class="source-link" target="_blank">Ofgem Price Cap</a></div>
                 </div>
                 <div class="assumption-item">
                     <label class="assumption-label">Labour Rate</label>
@@ -824,10 +1038,9 @@
                             <svg viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/></svg>
                         </button>
                     </div>
-                    <div class="assumption-source"><a href="#" class="source-link">UK Minimum Wage</a></div>
+                    <div class="assumption-source"><a href="https://www.gov.uk/national-minimum-wage-rates" class="source-link" target="_blank">UK Government</a></div>
                 </div>
                 
-                <!-- Mobile-friendly close button at bottom -->
                 <div style="padding: 20px; text-align: center; border-top: 1px solid var(--neutral-200); background: var(--neutral-50);">
                     <button onclick="closeAssumptions(); return false;" style="background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem;">
                         Done
@@ -838,10 +1051,9 @@
     </div>
 
     <script>
-        // Exact assumptions from original dashboard
         const DEFAULT_ASSUMPTIONS = {
             electricityRate: 0.25, labourRate: 12.21,
-            paperCup: { cost: 0.15, water: 0.25, energy: 0.06, co2: 0.012 },
+            paperCup: { cost: 0.15, water: 0.25, energy: 0.06, co2: 0.01 },
             handwash: { waterPerCup: 1.0, energyPerCup: 0.08, co2PerCup: 0.02, detergentPerCup: 0.01 },
             dishwasher: { capacity: 40, waterPerLoad: 13.2, energyPerLoad: 0.9, co2PerLoad: 0.16, labourTimePerLoad: 10, detergentPerLoad: 0.15 }
         };
@@ -849,7 +1061,7 @@
         const GLOBAL_ASSUMPTIONS = JSON.parse(JSON.stringify(DEFAULT_ASSUMPTIONS));
         
         const INSTARINSE_CONSTANTS = {
-            waterPerCup: 0.05, energyPerCup: 0.008, co2PerCup: 0.002, labourTimePerCup: 0.05 / 60
+            waterPerCup: 0.05, energyPerCup: 0.01, co2PerCup: 0.00, labourTimePerCup: 0.05 / 60
         };
 
         const state = {
@@ -926,41 +1138,42 @@
             const dishwasherCost = (GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad * GLOBAL_ASSUMPTIONS.electricityRate + GLOBAL_ASSUMPTIONS.dishwasher.labourTimePerLoad / 60 * GLOBAL_ASSUMPTIONS.labourRate + GLOBAL_ASSUMPTIONS.dishwasher.detergentPerLoad) / GLOBAL_ASSUMPTIONS.dishwasher.capacity;
             const instarinseCost = INSTARINSE_CONSTANTS.energyPerCup * GLOBAL_ASSUMPTIONS.electricityRate + INSTARINSE_CONSTANTS.labourTimePerCup * GLOBAL_ASSUMPTIONS.labourRate;
             
-            document.getElementById('paperCostDisplay').textContent = paperCost.toFixed(3);
-            document.getElementById('handwashCostDisplay').textContent = handwashCost.toFixed(3);
-            document.getElementById('dishwasherCostDisplay').textContent = dishwasherCost.toFixed(3);
-            document.getElementById('instarinseCostDisplay').textContent = instarinseCost.toFixed(3);
+            document.getElementById('paperCostDisplay').textContent = (paperCost * 100).toFixed(1);
+            document.getElementById('handwashCostDisplay').textContent = (handwashCost * 100).toFixed(1);
+            document.getElementById('dishwasherCostDisplay').textContent = (dishwasherCost * 100).toFixed(1);
+            document.getElementById('instarinseCostDisplay').textContent = (instarinseCost * 100).toFixed(1);
             
-            document.getElementById('paperCostOnly').textContent = GLOBAL_ASSUMPTIONS.paperCup.cost.toFixed(3);
+            document.getElementById('paperCostOnly').textContent = (GLOBAL_ASSUMPTIONS.paperCup.cost * 100).toFixed(1);
             document.getElementById('paperWaterOnly').textContent = GLOBAL_ASSUMPTIONS.paperCup.water.toFixed(2);
             document.getElementById('paperCo2Only').textContent = (GLOBAL_ASSUMPTIONS.paperCup.co2 * 1000).toFixed(0);
-            document.getElementById('paperEnergyOnly').textContent = (GLOBAL_ASSUMPTIONS.paperCup.energy * 1000).toFixed(0);
+            document.getElementById('paperEnergyOnly').textContent = GLOBAL_ASSUMPTIONS.paperCup.energy.toFixed(2);
             
-            document.getElementById('handwashDetergentOnly').textContent = GLOBAL_ASSUMPTIONS.handwash.detergentPerCup.toFixed(3);
+            document.getElementById('handwashDetergentOnly').textContent = (GLOBAL_ASSUMPTIONS.handwash.detergentPerCup * 100).toFixed(1);
             document.getElementById('handwashWaterOnly').textContent = GLOBAL_ASSUMPTIONS.handwash.waterPerCup.toFixed(1);
             document.getElementById('handwashCo2Only').textContent = (GLOBAL_ASSUMPTIONS.handwash.co2PerCup * 1000).toFixed(0);
-            document.getElementById('handwashEnergyOnly').textContent = (GLOBAL_ASSUMPTIONS.handwash.energyPerCup * 1000).toFixed(0);
+            document.getElementById('handwashEnergyOnly').textContent = GLOBAL_ASSUMPTIONS.handwash.energyPerCup.toFixed(2);
             
             const dishwasherLoadCost = GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad * GLOBAL_ASSUMPTIONS.electricityRate + GLOBAL_ASSUMPTIONS.dishwasher.labourTimePerLoad / 60 * GLOBAL_ASSUMPTIONS.labourRate + GLOBAL_ASSUMPTIONS.dishwasher.detergentPerLoad;
             document.getElementById('dishwasherLoadCost').textContent = dishwasherLoadCost.toFixed(2);
             document.getElementById('dishwasherWaterOnly').textContent = (GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad / GLOBAL_ASSUMPTIONS.dishwasher.capacity).toFixed(2);
             document.getElementById('dishwasherCo2Only').textContent = (GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad / GLOBAL_ASSUMPTIONS.dishwasher.capacity * 1000).toFixed(0);
-            document.getElementById('dishwasherEnergyOnly').textContent = (GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad / GLOBAL_ASSUMPTIONS.dishwasher.capacity * 1000).toFixed(1);
+            document.getElementById('dishwasherEnergyOnly').textContent = (GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad / GLOBAL_ASSUMPTIONS.dishwasher.capacity).toFixed(2);
             
             const instarinseLabourCostPer100 = INSTARINSE_CONSTANTS.labourTimePerCup * 100 * GLOBAL_ASSUMPTIONS.labourRate;
             const instarinseLabourTimePer100 = INSTARINSE_CONSTANTS.labourTimePerCup * 100 * 60;
-            document.getElementById('instarinseOpOnly').textContent = instarinseCost.toFixed(3);
+            document.getElementById('instarinseOpOnly').textContent = (instarinseCost * 100).toFixed(1);
             document.getElementById('instarinseWaterOnly').textContent = (INSTARINSE_CONSTANTS.waterPerCup * 1000).toFixed(0);
             document.getElementById('instarinseCo2Only').textContent = (INSTARINSE_CONSTANTS.co2PerCup * 1000).toFixed(0);
-            document.getElementById('instarinseEnergyOnly').textContent = (INSTARINSE_CONSTANTS.energyPerCup * 1000).toFixed(0);
+            document.getElementById('instarinseEnergyOnly').textContent = INSTARINSE_CONSTANTS.energyPerCup.toFixed(2);
             document.getElementById('instarinseLabourTime').textContent = instarinseLabourTimePer100.toFixed(0);
+            
+            document.getElementById('dishwasherCapacityNote').textContent = GLOBAL_ASSUMPTIONS.dishwasher.capacity;
         }
 
         function updateDailyUsage() {
             const daily = (state.teamSize * state.cupsPerDay * state.officeDays) / 5;
             els.dailyUsage.textContent = formatNumber(daily);
             
-            // Update all cup displays when daily usage changes
             updateSliderDisplay('current');
             updateSliderDisplay('optimal');
             calculateSavings();
@@ -976,7 +1189,6 @@
                 els.currentHandwashValue.textContent = mix.handwash + '%';
                 els.currentDishwasherValue.textContent = mix.dishwasher + '%';
                 
-                // Update live cup counts
                 els.currentPaperCups.textContent = formatNumber((mix.paper / 100) * dailyCups, 0) + ' cups/day';
                 els.currentHandwashCups.textContent = formatNumber((mix.handwash / 100) * dailyCups, 0) + ' cups/day';
                 els.currentDishwasherCups.textContent = formatNumber((mix.dishwasher / 100) * dailyCups, 0) + ' cups/day';
@@ -989,7 +1201,6 @@
                 els.optimalHandwashValue.textContent = mix.handwash + '%';
                 els.optimalDishwasherValue.textContent = mix.dishwasher + '%';
                 
-                // Update live cup counts
                 els.optimalPaperCups.textContent = formatNumber((mix.paper / 100) * dailyCups, 0) + ' cups/day';
                 els.optimalInstarinseCups.textContent = formatNumber((mix.instarinse / 100) * dailyCups, 0) + ' cups/day';
                 els.optimalHandwashCups.textContent = formatNumber((mix.handwash / 100) * dailyCups, 0) + ' cups/day';
@@ -1044,12 +1255,11 @@
             const waterSavings = Math.max(0, currentWater - optimalWater);
             const co2Savings = Math.max(0, currentCO2 - optimalCO2);
             const energySavings = Math.max(0, currentEnergy - optimalEnergy);
-            const timeSavings = Math.max(0, (currentHandwashCups - optimalHandwashCups) * 30 / 3600 / 8);
             
             els.costSavings.textContent = formatCurrency(costSavings);
-            els.waterSaved.textContent = formatNumber(waterSavings, 0); // Show actual litres
-            els.co2Saved.textContent = formatNumber(co2Savings, 0); // Show kg, not tonnes
-            els.timeSaved.textContent = formatNumber(energySavings, 0); // Show kWh saved instead of time
+            els.waterSaved.textContent = formatNumber(waterSavings, 0);
+            els.co2Saved.textContent = formatNumber(co2Savings, 0);
+            els.timeSaved.textContent = formatNumber(energySavings, 0);
             
             els.currentCost.textContent = formatCurrency(currentCost);
             els.newCost.textContent = formatCurrency(optimalCost);
@@ -1071,60 +1281,63 @@
             els.savingsEnergy.textContent = formatNumber(energySavings, 0) + ' kWh';
             els.energyPercent.textContent = currentEnergy > 0 ? Math.round((energySavings / currentEnergy) * 100) + '%' : '0%';
             
-            // Update breakdown values
-            updateBreakdownValues(currentPaperCups, currentHandwashCups, currentDishwasherCups, optimalPaperCups, optimalInstarinseCups, optimalHandwashCups, optimalDishwasherCups);
         }
 
-        // Update detailed breakdown values for each wash type
+        function toggleImpactBreakdown(type) {
+            const breakdown = document.getElementById(type + 'BreakdownImpact');
+            const indicator = document.getElementById(type + 'Indicator');
+            
+            if (breakdown.classList.contains('open')) {
+                breakdown.classList.remove('open');
+                indicator.classList.remove('rotated');
+            } else {
+                breakdown.classList.add('open');
+                indicator.classList.add('rotated');
+            }
+        }
+
         function updateBreakdownValues(currentPaperCups, currentHandwashCups, currentDishwasherCups, optimalPaperCups, optimalInstarinseCups, optimalHandwashCups, optimalDishwasherCups) {
             const paperCostPerCup = GLOBAL_ASSUMPTIONS.paperCup.cost;
             const handwashCostPerCup = GLOBAL_ASSUMPTIONS.handwash.detergentPerCup + (GLOBAL_ASSUMPTIONS.handwash.energyPerCup * GLOBAL_ASSUMPTIONS.electricityRate);
             const dishwasherCostPerCup = (GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad * GLOBAL_ASSUMPTIONS.electricityRate + GLOBAL_ASSUMPTIONS.dishwasher.labourTimePerLoad / 60 * GLOBAL_ASSUMPTIONS.labourRate + GLOBAL_ASSUMPTIONS.dishwasher.detergentPerLoad) / GLOBAL_ASSUMPTIONS.dishwasher.capacity;
             const instarinseCostPerCup = INSTARINSE_CONSTANTS.energyPerCup * GLOBAL_ASSUMPTIONS.electricityRate + INSTARINSE_CONSTANTS.labourTimePerCup * GLOBAL_ASSUMPTIONS.labourRate;
             
-            // Cost breakdown
-            document.getElementById('currentPaperCost').textContent = formatCurrency(currentPaperCups * paperCostPerCup);
-            document.getElementById('currentHandwashCost').textContent = formatCurrency(currentHandwashCups * handwashCostPerCup);
-            document.getElementById('currentDishwasherCost').textContent = formatCurrency(currentDishwasherCups * dishwasherCostPerCup);
-            
-            document.getElementById('optimalPaperCost').textContent = formatCurrency(optimalPaperCups * paperCostPerCup);
-            document.getElementById('optimalHandwashCost').textContent = formatCurrency(optimalHandwashCups * handwashCostPerCup);
-            document.getElementById('optimalDishwasherCost').textContent = formatCurrency(optimalDishwasherCups * dishwasherCostPerCup);
-            document.getElementById('optimalInstarinseCost').textContent = formatCurrency(optimalInstarinseCups * instarinseCostPerCup);
-            
-            // Water breakdown
-            document.getElementById('currentPaperWater').textContent = formatNumber(currentPaperCups * GLOBAL_ASSUMPTIONS.paperCup.water, 0) + 'L';
-            document.getElementById('currentHandwashWater').textContent = formatNumber(currentHandwashCups * GLOBAL_ASSUMPTIONS.handwash.waterPerCup, 0) + 'L';
-            document.getElementById('currentDishwasherWater').textContent = formatNumber(currentDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad, 0) + 'L';
-            
-            document.getElementById('optimalPaperWater').textContent = formatNumber(optimalPaperCups * GLOBAL_ASSUMPTIONS.paperCup.water, 0) + 'L';
-            document.getElementById('optimalHandwashWater').textContent = formatNumber(optimalHandwashCups * GLOBAL_ASSUMPTIONS.handwash.waterPerCup, 0) + 'L';
-            document.getElementById('optimalDishwasherWater').textContent = formatNumber(optimalDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad, 0) + 'L';
-            document.getElementById('optimalInstarinseWater').textContent = formatNumber(optimalInstarinseCups * INSTARINSE_CONSTANTS.waterPerCup, 0) + 'L';
-            
-            // CO2 breakdown
-            document.getElementById('currentPaperCo2').textContent = formatNumber(currentPaperCups * GLOBAL_ASSUMPTIONS.paperCup.co2, 0) + 'kg';
-            document.getElementById('currentHandwashCo2').textContent = formatNumber(currentHandwashCups * GLOBAL_ASSUMPTIONS.handwash.co2PerCup, 0) + 'kg';
-            document.getElementById('currentDishwasherCo2').textContent = formatNumber(currentDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad, 0) + 'kg';
-            
-            document.getElementById('optimalPaperCo2').textContent = formatNumber(optimalPaperCups * GLOBAL_ASSUMPTIONS.paperCup.co2, 0) + 'kg';
-            document.getElementById('optimalHandwashCo2').textContent = formatNumber(optimalHandwashCups * GLOBAL_ASSUMPTIONS.handwash.co2PerCup, 0) + 'kg';
-            document.getElementById('optimalDishwasherCo2').textContent = formatNumber(optimalDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad, 0) + 'kg';
-            document.getElementById('optimalInstarinseCo2').textContent = formatNumber(optimalInstarinseCups * INSTARINSE_CONSTANTS.co2PerCup, 0) + 'kg';
-            
-            // Energy breakdown
-            document.getElementById('currentPaperEnergy').textContent = formatNumber(currentPaperCups * GLOBAL_ASSUMPTIONS.paperCup.energy, 0) + ' kWh';
-            document.getElementById('currentHandwashEnergy').textContent = formatNumber(currentHandwashCups * GLOBAL_ASSUMPTIONS.handwash.energyPerCup, 0) + ' kWh';
-            document.getElementById('currentDishwasherEnergy').textContent = formatNumber(currentDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad, 0) + ' kWh';
-            
-            document.getElementById('optimalPaperEnergy').textContent = formatNumber(optimalPaperCups * GLOBAL_ASSUMPTIONS.paperCup.energy, 0) + ' kWh';
-            document.getElementById('optimalHandwashEnergy').textContent = formatNumber(optimalHandwashCups * GLOBAL_ASSUMPTIONS.handwash.energyPerCup, 0) + ' kWh';
-            document.getElementById('optimalDishwasherEnergy').textContent = formatNumber(optimalDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad, 0) + ' kWh';
-            document.getElementById('optimalInstarinseEnergy').textContent = formatNumber(optimalInstarinseCups * INSTARINSE_CONSTANTS.energyPerCup, 0) + ' kWh';
+            if (document.getElementById('currentPaperCostBreakdown')) {
+                document.getElementById('currentPaperCostBreakdown').textContent = formatCurrency(currentPaperCups * paperCostPerCup);
+                document.getElementById('currentHandwashCostBreakdown').textContent = formatCurrency(currentHandwashCups * handwashCostPerCup);
+                document.getElementById('currentDishwasherCostBreakdown').textContent = formatCurrency(currentDishwasherCups * dishwasherCostPerCup);
+                document.getElementById('optimalPaperCostBreakdown').textContent = formatCurrency(optimalPaperCups * paperCostPerCup);
+                document.getElementById('optimalHandwashCostBreakdown').textContent = formatCurrency(optimalHandwashCups * handwashCostPerCup);
+                document.getElementById('optimalDishwasherCostBreakdown').textContent = formatCurrency(optimalDishwasherCups * dishwasherCostPerCup);
+                document.getElementById('optimalInstarinseCostBreakdown').textContent = formatCurrency(optimalInstarinseCups * instarinseCostPerCup);
+                
+                document.getElementById('currentPaperWaterBreakdown').textContent = formatNumber(currentPaperCups * GLOBAL_ASSUMPTIONS.paperCup.water, 0) + 'L';
+                document.getElementById('currentHandwashWaterBreakdown').textContent = formatNumber(currentHandwashCups * GLOBAL_ASSUMPTIONS.handwash.waterPerCup, 0) + 'L';
+                document.getElementById('currentDishwasherWaterBreakdown').textContent = formatNumber(currentDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad, 0) + 'L';
+                document.getElementById('optimalPaperWaterBreakdown').textContent = formatNumber(optimalPaperCups * GLOBAL_ASSUMPTIONS.paperCup.water, 0) + 'L';
+                document.getElementById('optimalHandwashWaterBreakdown').textContent = formatNumber(optimalHandwashCups * GLOBAL_ASSUMPTIONS.handwash.waterPerCup, 0) + 'L';
+                document.getElementById('optimalDishwasherWaterBreakdown').textContent = formatNumber(optimalDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad, 0) + 'L';
+                document.getElementById('optimalInstarinseWaterBreakdown').textContent = formatNumber(optimalInstarinseCups * INSTARINSE_CONSTANTS.waterPerCup, 0) + 'L';
+                
+                document.getElementById('currentPaperCo2Breakdown').textContent = formatNumber(currentPaperCups * GLOBAL_ASSUMPTIONS.paperCup.co2, 0) + 'kg';
+                document.getElementById('currentHandwashCo2Breakdown').textContent = formatNumber(currentHandwashCups * GLOBAL_ASSUMPTIONS.handwash.co2PerCup, 0) + 'kg';
+                document.getElementById('currentDishwasherCo2Breakdown').textContent = formatNumber(currentDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad, 0) + 'kg';
+                document.getElementById('optimalPaperCo2Breakdown').textContent = formatNumber(optimalPaperCups * GLOBAL_ASSUMPTIONS.paperCup.co2, 0) + 'kg';
+                document.getElementById('optimalHandwashCo2Breakdown').textContent = formatNumber(optimalHandwashCups * GLOBAL_ASSUMPTIONS.handwash.co2PerCup, 0) + 'kg';
+                document.getElementById('optimalDishwasherCo2Breakdown').textContent = formatNumber(optimalDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad, 0) + 'kg';
+                document.getElementById('optimalInstarinseCo2Breakdown').textContent = formatNumber(optimalInstarinseCups * INSTARINSE_CONSTANTS.co2PerCup, 0) + 'kg';
+                
+                document.getElementById('currentPaperEnergyBreakdown').textContent = formatNumber(currentPaperCups * GLOBAL_ASSUMPTIONS.paperCup.energy, 0) + ' kWh';
+                document.getElementById('currentHandwashEnergyBreakdown').textContent = formatNumber(currentHandwashCups * GLOBAL_ASSUMPTIONS.handwash.energyPerCup, 0) + ' kWh';
+                document.getElementById('currentDishwasherEnergyBreakdown').textContent = formatNumber(currentDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad, 0) + ' kWh';
+                document.getElementById('optimalPaperEnergyBreakdown').textContent = formatNumber(optimalPaperCups * GLOBAL_ASSUMPTIONS.paperCup.energy, 0) + ' kWh';
+                document.getElementById('optimalHandwashEnergyBreakdown').textContent = formatNumber(optimalHandwashCups * GLOBAL_ASSUMPTIONS.handwash.energyPerCup, 0) + ' kWh';
+                document.getElementById('optimalDishwasherEnergyBreakdown').textContent = formatNumber(optimalDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad, 0) + ' kWh';
+                document.getElementById('optimalInstarinseEnergyBreakdown').textContent = formatNumber(optimalInstarinseCups * INSTARINSE_CONSTANTS.energyPerCup, 0) + ' kWh';
+            }
         }
 
         function updateCalculations() {
-            // Update all assumptions from inputs (with fallbacks)
             GLOBAL_ASSUMPTIONS.paperCup.cost = parseFloat(document.getElementById('paperCupCost')?.value) || DEFAULT_ASSUMPTIONS.paperCup.cost;
             GLOBAL_ASSUMPTIONS.paperCup.water = parseFloat(document.getElementById('paperCupWater')?.value) || DEFAULT_ASSUMPTIONS.paperCup.water;
             GLOBAL_ASSUMPTIONS.paperCup.energy = parseFloat(document.getElementById('paperCupEnergy')?.value) || DEFAULT_ASSUMPTIONS.paperCup.energy;
@@ -1164,7 +1377,7 @@
                     case 'labourRate': defaultValue = DEFAULT_ASSUMPTIONS.labourRate; break;
                 }
                 
-                if (Math.abs(defaultValue - currentValue) > 0.001) {
+                if (Math.abs(defaultValue - currentValue) > 0.01) {
                     input.classList.add('modified');
                 } else {
                     input.classList.remove('modified');
@@ -1247,40 +1460,199 @@
         window.updateCalculations = updateCalculations;
         window.resetAssumption = resetAssumption;
         window.toggleBreakdown = toggleBreakdown;
-
-        // Simple event handlers
+        window.toggleImpactBreakdown = toggleImpactBreakdown;
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeAssumptions();
             }
         });
 
-        // Backdrop click to close (with touch support)
         document.getElementById('modalBackdrop').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeAssumptions();
             }
         });
         
-        // Prevent modal content clicks from bubbling to backdrop
         document.getElementById('assumptionsModal').addEventListener('click', function(e) {
             e.stopPropagation();
         });
         
-        // Additional mobile touch events
         document.getElementById('modalBackdrop').addEventListener('touchend', function(e) {
             if (e.target === this) {
                 closeAssumptions();
             }
         });
 
-
-        // Initialize
         updateDailyUsage();
         updateSliderDisplay('current');
         updateSliderDisplay('optimal');
         updatePerCupCosts();
+
+        function exportToExcel() {
+            const annualCups = state.teamSize * state.cupsPerDay * state.officeDays * 52;
+            
+            const currentPaperCups = annualCups * (state.current.paper / 100);
+            const currentHandwashCups = annualCups * (state.current.handwash / 100);
+            const currentDishwasherCups = annualCups * (state.current.dishwasher / 100);
+            
+            const optimalPaperCups = annualCups * (state.optimal.paper / 100);
+            const optimalInstarinseCups = annualCups * (state.optimal.instarinse / 100);
+            const optimalHandwashCups = annualCups * (state.optimal.handwash / 100);
+            const optimalDishwasherCups = annualCups * (state.optimal.dishwasher / 100);
+            
+            const paperCostPerCup = GLOBAL_ASSUMPTIONS.paperCup.cost;
+            const handwashCostPerCup = GLOBAL_ASSUMPTIONS.handwash.detergentPerCup + (GLOBAL_ASSUMPTIONS.handwash.energyPerCup * GLOBAL_ASSUMPTIONS.electricityRate);
+            const dishwasherCostPerCup = (GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad * GLOBAL_ASSUMPTIONS.electricityRate + GLOBAL_ASSUMPTIONS.dishwasher.labourTimePerLoad / 60 * GLOBAL_ASSUMPTIONS.labourRate + GLOBAL_ASSUMPTIONS.dishwasher.detergentPerLoad) / GLOBAL_ASSUMPTIONS.dishwasher.capacity;
+            const instarinseCostPerCup = INSTARINSE_CONSTANTS.energyPerCup * GLOBAL_ASSUMPTIONS.electricityRate + INSTARINSE_CONSTANTS.labourTimePerCup * GLOBAL_ASSUMPTIONS.labourRate;
+            
+            const currentCost = (currentPaperCups * paperCostPerCup) + (currentHandwashCups * handwashCostPerCup) + (currentDishwasherCups * dishwasherCostPerCup);
+            const optimalCost = (optimalPaperCups * paperCostPerCup) + (optimalInstarinseCups * instarinseCostPerCup) + (optimalHandwashCups * handwashCostPerCup) + (optimalDishwasherCups * dishwasherCostPerCup);
+            
+            const currentWater = (currentPaperCups * GLOBAL_ASSUMPTIONS.paperCup.water) + (currentHandwashCups * GLOBAL_ASSUMPTIONS.handwash.waterPerCup) + (currentDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad);
+            const optimalWater = (optimalPaperCups * GLOBAL_ASSUMPTIONS.paperCup.water) + (optimalInstarinseCups * INSTARINSE_CONSTANTS.waterPerCup) + (optimalHandwashCups * GLOBAL_ASSUMPTIONS.handwash.waterPerCup) + (optimalDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad);
+            
+            const currentCO2 = (currentPaperCups * GLOBAL_ASSUMPTIONS.paperCup.co2) + (currentHandwashCups * GLOBAL_ASSUMPTIONS.handwash.co2PerCup) + (currentDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad);
+            const optimalCO2 = (optimalPaperCups * GLOBAL_ASSUMPTIONS.paperCup.co2) + (optimalInstarinseCups * INSTARINSE_CONSTANTS.co2PerCup) + (optimalHandwashCups * GLOBAL_ASSUMPTIONS.handwash.co2PerCup) + (optimalDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad);
+            
+            const currentEnergy = (currentPaperCups * GLOBAL_ASSUMPTIONS.paperCup.energy) + (currentHandwashCups * GLOBAL_ASSUMPTIONS.handwash.energyPerCup) + (currentDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad);
+            const optimalEnergy = (optimalPaperCups * GLOBAL_ASSUMPTIONS.paperCup.energy) + (optimalInstarinseCups * INSTARINSE_CONSTANTS.energyPerCup) + (optimalHandwashCups * GLOBAL_ASSUMPTIONS.handwash.energyPerCup) + (optimalDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad);
+
+            function cleanNumber(num) {
+                return parseFloat(num.toString().replace(/,/g, ''));
+            }
+            
+            function formatForExcel(num, decimals = 0) {
+                return parseFloat(num.toFixed(decimals));
+            }
+
+            const csvData = [
+                ['ImpactOS Saving Estimator Report'],
+                ['Generated', new Date().toLocaleDateString('en-GB'), new Date().toLocaleTimeString('en-GB')],
+                [''],
+                [''],
+                ['SITE CONFIGURATION'],
+                ['Parameter', 'Value'],
+                ['Site Users', state.teamSize],
+                ['Operating Days Per Week', state.officeDays],
+                ['Cups Per Person Per Day', state.cupsPerDay],
+                ['Total Annual Cups', formatForExcel(annualCups)],
+                ['Daily Average Cups', formatForExcel(annualCups/365)],
+                [''],
+                [''],
+                ['CURRENT MIX PERCENTAGES'],
+                ['Method', 'Percentage'],
+                ['Paper Cups', `${state.current.paper}%`],
+                ['Hand Washing', `${state.current.handwash}%`],
+                ['Dishwasher', `${state.current.dishwasher}%`],
+                ['Total', `${state.current.paper + state.current.handwash + state.current.dishwasher}%`],
+                [''],
+                [''],
+                ['OPTIMISED MIX PERCENTAGES'],
+                ['Method', 'Percentage'],
+                ['Paper Cups', `${state.optimal.paper}%`],
+                ['Instarinse', `${state.optimal.instarinse}%`],
+                ['Hand Washing', `${state.optimal.handwash}%`],
+                ['Dishwasher', `${state.optimal.dishwasher}%`],
+                ['Total', `${state.optimal.paper + state.optimal.instarinse + state.optimal.handwash + state.optimal.dishwasher}%`],
+                [''],
+                [''],
+                ['ANNUAL CUPS BY METHOD'],
+                ['Method', 'Current Cups', 'Optimised Cups', 'Change'],
+                ['Paper Cups', formatForExcel(currentPaperCups), formatForExcel(optimalPaperCups), formatForExcel(currentPaperCups - optimalPaperCups)],
+                ['Hand Washing', formatForExcel(currentHandwashCups), formatForExcel(optimalHandwashCups), formatForExcel(currentHandwashCups - optimalHandwashCups)],
+                ['Dishwasher', formatForExcel(currentDishwasherCups), formatForExcel(optimalDishwasherCups), formatForExcel(currentDishwasherCups - optimalDishwasherCups)],
+                ['Instarinse', 0, formatForExcel(optimalInstarinseCups), formatForExcel(optimalInstarinseCups)],
+                [''],
+                [''],
+                ['ANNUAL COST BREAKDOWN'],
+                ['Method', 'Current Cost', 'Optimised Cost', 'Savings', 'Cost Per Cup'],
+                ['Paper Cups', `£${formatForExcel(currentPaperCups * paperCostPerCup)}`, `£${formatForExcel(optimalPaperCups * paperCostPerCup)}`, `£${formatForExcel((currentPaperCups - optimalPaperCups) * paperCostPerCup)}`, `£${formatForExcel(paperCostPerCup, 2)}`],
+                ['Hand Washing', `£${formatForExcel(currentHandwashCups * handwashCostPerCup)}`, `£${formatForExcel(optimalHandwashCups * handwashCostPerCup)}`, `£${formatForExcel((currentHandwashCups - optimalHandwashCups) * handwashCostPerCup)}`, `£${formatForExcel(handwashCostPerCup, 2)}`],
+                ['Dishwasher', `£${formatForExcel(currentDishwasherCups * dishwasherCostPerCup)}`, `£${formatForExcel(optimalDishwasherCups * dishwasherCostPerCup)}`, `£${formatForExcel((currentDishwasherCups - optimalDishwasherCups) * dishwasherCostPerCup)}`, `£${formatForExcel(dishwasherCostPerCup, 2)}`],
+                ['Instarinse', '£0', `£${formatForExcel(optimalInstarinseCups * instarinseCostPerCup)}`, `£${formatForExcel(-optimalInstarinseCups * instarinseCostPerCup)}`, `£${formatForExcel(instarinseCostPerCup, 2)}`],
+                ['TOTAL', `£${formatForExcel(currentCost)}`, `£${formatForExcel(optimalCost)}`, `£${formatForExcel(currentCost - optimalCost)}`, ''],
+                [''],
+                [''],
+                ['ANNUAL WATER BREAKDOWN'],
+                ['Method', 'Current Usage', 'Optimised Usage', 'Water Savings'],
+                ['Paper Cups', `${formatForExcel(currentPaperCups * GLOBAL_ASSUMPTIONS.paperCup.water)}L`, `${formatForExcel(optimalPaperCups * GLOBAL_ASSUMPTIONS.paperCup.water)}L`, `${formatForExcel((currentPaperCups - optimalPaperCups) * GLOBAL_ASSUMPTIONS.paperCup.water)}L`],
+                ['Hand Washing', `${formatForExcel(currentHandwashCups * GLOBAL_ASSUMPTIONS.handwash.waterPerCup)}L`, `${formatForExcel(optimalHandwashCups * GLOBAL_ASSUMPTIONS.handwash.waterPerCup)}L`, `${formatForExcel((currentHandwashCups - optimalHandwashCups) * GLOBAL_ASSUMPTIONS.handwash.waterPerCup)}L`],
+                ['Dishwasher', `${formatForExcel(currentDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad)}L`, `${formatForExcel(optimalDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad)}L`, `${formatForExcel((currentDishwasherCups - optimalDishwasherCups) / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad)}L`],
+                ['Instarinse', '0L', `${formatForExcel(optimalInstarinseCups * INSTARINSE_CONSTANTS.waterPerCup)}L`, `${formatForExcel(-optimalInstarinseCups * INSTARINSE_CONSTANTS.waterPerCup)}L`],
+                ['TOTAL', `${formatForExcel(currentWater)}L`, `${formatForExcel(optimalWater)}L`, `${formatForExcel(currentWater - optimalWater)}L`],
+                [''],
+                [''],
+                ['ANNUAL CO2 BREAKDOWN'],
+                ['Method', 'Current Emissions', 'Optimised Emissions', 'CO2 Reduction'],
+                ['Paper Cups', `${formatForExcel(currentPaperCups * GLOBAL_ASSUMPTIONS.paperCup.co2)}kg`, `${formatForExcel(optimalPaperCups * GLOBAL_ASSUMPTIONS.paperCup.co2)}kg`, `${formatForExcel((currentPaperCups - optimalPaperCups) * GLOBAL_ASSUMPTIONS.paperCup.co2)}kg`],
+                ['Hand Washing', `${formatForExcel(currentHandwashCups * GLOBAL_ASSUMPTIONS.handwash.co2PerCup)}kg`, `${formatForExcel(optimalHandwashCups * GLOBAL_ASSUMPTIONS.handwash.co2PerCup)}kg`, `${formatForExcel((currentHandwashCups - optimalHandwashCups) * GLOBAL_ASSUMPTIONS.handwash.co2PerCup)}kg`],
+                ['Dishwasher', `${formatForExcel(currentDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad)}kg`, `${formatForExcel(optimalDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad)}kg`, `${formatForExcel((currentDishwasherCups - optimalDishwasherCups) / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad)}kg`],
+                ['Instarinse', '0kg', `${formatForExcel(optimalInstarinseCups * INSTARINSE_CONSTANTS.co2PerCup)}kg`, `${formatForExcel(-optimalInstarinseCups * INSTARINSE_CONSTANTS.co2PerCup)}kg`],
+                ['TOTAL', `${formatForExcel(currentCO2)}kg`, `${formatForExcel(optimalCO2)}kg`, `${formatForExcel(currentCO2 - optimalCO2)}kg`],
+                [''],
+                [''],
+                ['ANNUAL ENERGY BREAKDOWN'],
+                ['Method', 'Current Usage', 'Optimised Usage', 'Energy Savings'],
+                ['Paper Cups', `${formatForExcel(currentPaperCups * GLOBAL_ASSUMPTIONS.paperCup.energy)} kWh`, `${formatForExcel(optimalPaperCups * GLOBAL_ASSUMPTIONS.paperCup.energy)} kWh`, `${formatForExcel((currentPaperCups - optimalPaperCups) * GLOBAL_ASSUMPTIONS.paperCup.energy)} kWh`],
+                ['Hand Washing', `${formatForExcel(currentHandwashCups * GLOBAL_ASSUMPTIONS.handwash.energyPerCup)} kWh`, `${formatForExcel(optimalHandwashCups * GLOBAL_ASSUMPTIONS.handwash.energyPerCup)} kWh`, `${formatForExcel((currentHandwashCups - optimalHandwashCups) * GLOBAL_ASSUMPTIONS.handwash.energyPerCup)} kWh`],
+                ['Dishwasher', `${formatForExcel(currentDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad)} kWh`, `${formatForExcel(optimalDishwasherCups / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad)} kWh`, `${formatForExcel((currentDishwasherCups - optimalDishwasherCups) / GLOBAL_ASSUMPTIONS.dishwasher.capacity * GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad)} kWh`],
+                ['Instarinse', '0 kWh', `${formatForExcel(optimalInstarinseCups * INSTARINSE_CONSTANTS.energyPerCup)} kWh`, `${formatForExcel(-optimalInstarinseCups * INSTARINSE_CONSTANTS.energyPerCup)} kWh`],
+                ['TOTAL', `${formatForExcel(currentEnergy)} kWh`, `${formatForExcel(optimalEnergy)} kWh`, `${formatForExcel(currentEnergy - optimalEnergy)} kWh`],
+                [''],
+                [''],
+                ['SUMMARY TOTALS'],
+                ['Metric', 'Current Value', 'Optimised Value', 'Total Savings', 'Reduction %'],
+                ['Annual Cost', `£${formatForExcel(currentCost)}`, `£${formatForExcel(optimalCost)}`, `£${formatForExcel(currentCost - optimalCost)}`, `${currentCost > 0 ? Math.round(((currentCost - optimalCost) / currentCost) * 100) : 0}%`],
+                ['Water Usage', `${formatForExcel(currentWater)}L`, `${formatForExcel(optimalWater)}L`, `${formatForExcel(currentWater - optimalWater)}L`, `${currentWater > 0 ? Math.round(((currentWater - optimalWater) / currentWater) * 100) : 0}%`],
+                ['CO2 Emissions', `${formatForExcel(currentCO2)}kg`, `${formatForExcel(optimalCO2)}kg`, `${formatForExcel(currentCO2 - optimalCO2)}kg`, `${currentCO2 > 0 ? Math.round(((currentCO2 - optimalCO2) / currentCO2) * 100) : 0}%`],
+                ['Energy Usage', `${formatForExcel(currentEnergy)} kWh`, `${formatForExcel(optimalEnergy)} kWh`, `${formatForExcel(currentEnergy - optimalEnergy)} kWh`, `${currentEnergy > 0 ? Math.round(((currentEnergy - optimalEnergy) / currentEnergy) * 100) : 0}%`],
+                [''],
+                [''],
+                ['ASSUMPTIONS USED'],
+                ['Paper Cup Cost per Cup', GLOBAL_ASSUMPTIONS.paperCup.cost],
+                ['Paper Cup Water per Cup L', GLOBAL_ASSUMPTIONS.paperCup.water],
+                ['Paper Cup Energy per Cup kWh', GLOBAL_ASSUMPTIONS.paperCup.energy],
+                ['Paper Cup CO2 per Cup KG', GLOBAL_ASSUMPTIONS.paperCup.co2],
+                ['Hand Wash Water per Cup L', GLOBAL_ASSUMPTIONS.handwash.waterPerCup],
+                ['Hand Wash Energy per Cup kWh', GLOBAL_ASSUMPTIONS.handwash.energyPerCup],
+                ['Hand Wash CO2 per Cup KG', GLOBAL_ASSUMPTIONS.handwash.co2PerCup],
+                ['Hand Wash Detergent per Cup GBP', GLOBAL_ASSUMPTIONS.handwash.detergentPerCup],
+                ['Dishwasher Capacity Cups', GLOBAL_ASSUMPTIONS.dishwasher.capacity],
+                ['Dishwasher Water per Load L', GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad],
+                ['Dishwasher Energy per Load kWh', GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad],
+                ['Dishwasher CO2 per Load KG', GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad],
+                ['Dishwasher Labour per Load Min', GLOBAL_ASSUMPTIONS.dishwasher.labourTimePerLoad],
+                ['Dishwasher Detergent per Load GBP', GLOBAL_ASSUMPTIONS.dishwasher.detergentPerLoad],
+                ['Instarinse Water per Cup L', INSTARINSE_CONSTANTS.waterPerCup],
+                ['Instarinse Energy per Cup kWh', INSTARINSE_CONSTANTS.energyPerCup],
+                ['Instarinse CO2 per Cup KG', INSTARINSE_CONSTANTS.co2PerCup],
+                ['Instarinse Labour per Cup Hours', INSTARINSE_CONSTANTS.labourTimePerCup],
+                ['Electricity Rate GBP per kWh', GLOBAL_ASSUMPTIONS.electricityRate],
+                ['Labour Rate GBP per Hour', GLOBAL_ASSUMPTIONS.labourRate]
+            ];
+
+            const csvContent = csvData.map(row => 
+                row.map(cell => {
+                    const str = String(cell);
+                    if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                        return `"${str.replace(/"/g, '""')}"`;
+                    }
+                    return str;
+                }).join(',')
+            ).join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `impactos-saving-estimator-${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        window.exportToExcel = exportToExcel;
     </script>
 </body>
-<!-- Updated: 1758652826 -->
 </html>
