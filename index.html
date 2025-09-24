@@ -489,7 +489,7 @@
                     <div class="instruction-item">
                         <div class="instruction-number green">5</div>
                         <div class="instruction-text">
-                            <h3>Your Impact</h3>
+                            <h3>Your Annual Impact</h3>
                             <p>See your cost savings and results</p>
                         </div>
                     </div>
@@ -507,12 +507,12 @@
                 <div class="input-grid">
                     <div class="input-group">
                         <label class="label" for="teamSize">Site Users</label>
-                        <input type="number" id="teamSize" class="input" value="100" min="10" max="50000">
+                        <input type="number" id="teamSize" class="input" value="1500" min="10" max="50000">
                     </div>
                     
                     <div class="input-group">
                         <label class="label" for="officeDays">Operating Days/Week</label>
-                        <input type="number" id="officeDays" class="input" value="5" min="1" max="7">
+                        <input type="number" id="officeDays" class="input" value="4" min="1" max="7">
                     </div>
                     
                     <div class="input-group">
@@ -579,8 +579,8 @@
                         <div class="slider-label">Paper Cups</div>
                         <div class="slider-control-row">
                             <div class="slider-color paper"></div>
-                        <input type="range" class="slider" id="optimalPaper" min="0" max="100" value="5" step="5">
-                        <div class="slider-value" id="optimalPaperValue">5%</div>
+                        <input type="range" class="slider" id="optimalPaper" min="0" max="100" value="0" step="5">
+                        <div class="slider-value" id="optimalPaperValue">0%</div>
                         </div>
                     </div>
                     <div class="cups-display" id="optimalPaperCups">50 cups/day</div>
@@ -609,8 +609,8 @@
                         <div class="slider-label">Dishwasher</div>
                         <div class="slider-control-row">
                             <div class="slider-color dishwasher"></div>
-                        <input type="range" class="slider" id="optimalDishwasher" min="0" max="100" value="15" step="5">
-                        <div class="slider-value" id="optimalDishwasherValue">15%</div>
+                        <input type="range" class="slider" id="optimalDishwasher" min="0" max="100" value="20" step="5">
+                        <div class="slider-value" id="optimalDishwasherValue">20%</div>
                         </div>
                     </div>
                     <div class="cups-display" id="optimalDishwasherCups">150 cups/day</div>
@@ -688,7 +688,7 @@
             <div class="results-cards">
                 <div class="results-title-wrapper">
                     <div class="step-number green">5</div>
-                    <h2 class="results-title">Your Impact</h2>
+                    <h2 class="results-title">Your Annual Impact</h2>
                 </div>
                 <div class="results-grid">
                     <div class="result-card">
@@ -1164,9 +1164,9 @@
         };
 
         const state = {
-            teamSize: 100, officeDays: 5, cupsPerDay: 2,
+            teamSize: 1500, officeDays: 4, cupsPerDay: 2,
             current: { paper: 30, handwash: 20, dishwasher: 50 },
-            optimal: { paper: 5, instarinse: 70, handwash: 10, dishwasher: 15 }
+            optimal: { paper: 0, instarinse: 70, handwash: 10, dishwasher: 20 }
         };
 
         const els = {
@@ -1543,8 +1543,8 @@
 
 
         // Event listeners
-        els.teamSize.addEventListener('input', (e) => { state.teamSize = parseInt(e.target.value) || 100; updateDailyUsage(); });
-        els.officeDays.addEventListener('input', (e) => { state.officeDays = parseInt(e.target.value) || 5; updateDailyUsage(); });
+        els.teamSize.addEventListener('input', (e) => { state.teamSize = parseInt(e.target.value) || 1500; updateDailyUsage(); });
+        els.officeDays.addEventListener('input', (e) => { state.officeDays = parseInt(e.target.value) || 4; updateDailyUsage(); });
         els.cupsPerDay.addEventListener('input', (e) => { state.cupsPerDay = parseFloat(e.target.value) || 2; updateDailyUsage(); });
 
         els.currentPaper.addEventListener('input', (e) => { state.current.paper = parseInt(e.target.value); updateSliderDisplay('current'); });
