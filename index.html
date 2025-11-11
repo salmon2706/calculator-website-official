@@ -893,7 +893,7 @@
                 </div>
             </div>
             
-            <button class="reset-defaults-btn" onclick="resetTab4()">Reset All Assumptions to Defaults</button>
+            <button class="reset-defaults-btn" onclick="resetTab4(event)">Reset All Assumptions to Defaults</button>
             
             <div class="assumptions-callout">
                 <h4>⚙️ Customize Your Calculations</h4>
@@ -1720,7 +1720,7 @@
             updateSliderDisplay('optimal');
         }
         
-        function resetTab4() {
+        function resetTab4(event) {
             // Reset GLOBAL_ASSUMPTIONS to DEFAULT_ASSUMPTIONS (robust - uses your defined defaults)
             GLOBAL_ASSUMPTIONS.paperCup.cost = DEFAULT_ASSUMPTIONS.paperCup.cost;
             GLOBAL_ASSUMPTIONS.paperCup.water = DEFAULT_ASSUMPTIONS.paperCup.water;
@@ -1773,6 +1773,20 @@
             setTimeout(() => {
                 updatePerCupCosts();
                 calculateSavings();
+                
+                // Flash the reset button to confirm action
+                const resetBtn = event?.target;
+                if (resetBtn) {
+                    const originalText = resetBtn.textContent;
+                    resetBtn.textContent = '✓ Reset Complete!';
+                    resetBtn.style.borderColor = '#22c55e';
+                    resetBtn.style.color = '#22c55e';
+                    setTimeout(() => {
+                        resetBtn.textContent = originalText;
+                        resetBtn.style.borderColor = '';
+                        resetBtn.style.color = '';
+                    }, 2000);
+                }
             }, 10);
         }
         
