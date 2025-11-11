@@ -277,14 +277,18 @@
                         width: 100%; box-sizing: border-box; box-shadow: 0 8px 32px rgba(144, 212, 246, 0.3); }
         .results-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 0; letter-spacing: -0.02em; }
         .results-title-wrapper { display: flex; align-items: center; justify-content: center; margin-bottom: 40px; }
-        .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
-        .result-card { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(20px);
-                      padding: 35px 30px; border-radius: 18px; border: 1px solid rgba(255, 255, 255, 0.3); 
-                      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-                      transition: all 0.3s ease; }
-        .result-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15), 0 2px 5px rgba(0, 0, 0, 0.12); }
-        .result-value { font-size: 2.8rem; font-weight: 700; margin-bottom: 12px; line-height: 1.1; letter-spacing: -0.02em; }
-        .result-label { font-size: 1.05rem; opacity: 0.95; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+        .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
+        .result-card { background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(20px);
+                      padding: 40px 30px; border-radius: 20px; border: 2px solid rgba(255, 255, 255, 0.4); 
+                      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+                      transition: all 0.4s ease; position: relative; overflow: hidden; }
+        .result-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+                              background: rgba(255, 255, 255, 0.5); }
+        .result-card:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2); }
+        .result-icon { font-size: 3rem; margin-bottom: 16px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .result-value { font-size: 3.2rem; font-weight: 800; margin-bottom: 12px; line-height: 1; letter-spacing: -0.03em;
+                       text-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .result-label { font-size: 0.95rem; opacity: 0.9; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
         
         .breakdown-section { background: var(--white); border-radius: 20px; padding: 40px; 
                            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border: 1px solid var(--neutral-200); 
@@ -423,9 +427,10 @@
             .steps-grid { grid-template-columns: 1fr; gap: 15px; }
             .comparison-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
             .comparison-card.instarinse { grid-column: 1 / -1; justify-self: center; max-width: 300px; }
-            .results-grid { grid-template-columns: repeat(2, 1fr); gap: 25px; }
-            .result-card { padding: 25px 20px; }
-            .result-value { font-size: 2.2rem; }
+            .results-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .result-card { padding: 30px 20px; }
+            .result-icon { font-size: 2.5rem; margin-bottom: 12px; }
+            .result-value { font-size: 2.5rem; }
             .instruction-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
             
             .table { font-size: 0.9rem; }
@@ -448,10 +453,11 @@
             .instruction-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
             .comparison-grid { grid-template-columns: 1fr; }
             .comparison-card.instarinse { grid-column: 1; max-width: none; }
-            .results-grid { grid-template-columns: 1fr; gap: 25px; }
-            .result-card { padding: 25px 20px; }
-            .result-value { font-size: 2.4rem; }
-            .result-label { font-size: 0.95rem; }
+            .results-grid { grid-template-columns: 1fr; gap: 20px; }
+            .result-card { padding: 30px 20px; }
+            .result-icon { font-size: 2.2rem; margin-bottom: 10px; }
+            .result-value { font-size: 2.2rem; }
+            .result-label { font-size: 0.9rem; letter-spacing: 0.8px; }
             .results-title-wrapper { flex-direction: column; gap: 12px; }
             .comparisons-header { flex-direction: column; gap: 20px; align-items: stretch; }
             .comparisons-title-wrapper { flex-direction: column; gap: 12px; align-items: flex-start; }
@@ -1029,18 +1035,22 @@
                 </div>
                 <div class="results-grid">
                     <div class="result-card">
+                        <div class="result-icon">💰</div>
                         <div class="result-value" id="costSavings">£15,000</div>
                         <div class="result-label">Cost Savings</div>
                     </div>
                     <div class="result-card">
+                        <div class="result-icon">💧</div>
                         <div class="result-value" id="waterSaved">3,250,000</div>
                         <div class="result-label">Water Conserved</div>
                     </div>
                     <div class="result-card">
+                        <div class="result-icon">🌍</div>
                         <div class="result-value" id="co2Saved">4,500</div>
                         <div class="result-label">CO₂ Eliminated</div>
                     </div>
                     <div class="result-card">
+                        <div class="result-icon">⚡</div>
                         <div class="result-value" id="timeSaved">1,700</div>
                         <div class="result-label">Energy Saved</div>
                     </div>
