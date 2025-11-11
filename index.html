@@ -340,6 +340,12 @@
             to { opacity: 1; transform: translateY(0); } 
         }
         
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) scale(1); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-8px) scale(1.05); }
+            20%, 40%, 60%, 80% { transform: translateX(8px) scale(1.05); }
+        }
+        
         .modal-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px);
                          z-index: 999; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
         .modal-backdrop.open { opacity: 1; visibility: visible; }
@@ -1409,8 +1415,56 @@
     </div>
 
     <script>
+        // Check if current tab has valid percentages
+        function canLeaveCurrentTab() {
+            const currentActiveTab = document.querySelector('.tab-content.active');
+            if (!currentActiveTab) return true;
+            
+            const tabId = currentActiveTab.id;
+            
+            // Check Tab 2 (Current Mix)
+            if (tabId === 'tab-2') {
+                const currentTotal = Object.values(state.current).reduce((sum, val) => sum + val, 0);
+                if (currentTotal !== 100) {
+                    flashValidationWarning('currentValidation');
+                    return false;
+                }
+            }
+            
+            // Check Tab 3 (Optimal Mix)
+            if (tabId === 'tab-3') {
+                const optimalTotal = Object.values(state.optimal).reduce((sum, val) => sum + val, 0);
+                if (optimalTotal !== 100) {
+                    flashValidationWarning('optimalValidation');
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        // Flash validation box to draw attention
+        function flashValidationWarning(validationId) {
+            const validation = document.getElementById(validationId);
+            if (!validation) return;
+            
+            // Flash animation
+            validation.style.animation = 'shake 0.5s ease-in-out';
+            validation.style.transform = 'scale(1.05)';
+            
+            setTimeout(() => {
+                validation.style.animation = '';
+                validation.style.transform = '';
+            }, 500);
+        }
+        
         // Tab Navigation Function
         function showTab(tabNumber) {
+            // Check if we can leave the current tab
+            if (!canLeaveCurrentTab()) {
+                return; // Block navigation
+            }
+            
             // Hide all tab contents
             const allTabs = document.querySelectorAll('.tab-content');
             allTabs.forEach(tab => tab.classList.remove('active'));
