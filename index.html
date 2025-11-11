@@ -45,6 +45,8 @@
                      border-radius: 14px; font-weight: 600; font-size: 0.85rem; color: var(--neutral-600); cursor: pointer; 
                      transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; 
                      white-space: nowrap; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .tab-text-short { display: none; }
+        .tab-text-full { display: inline; }
         .tab-button:hover { background: var(--neutral-50); border-color: var(--primary); transform: translateY(-2px); 
                            box-shadow: 0 4px 12px rgba(144, 212, 246, 0.2); }
         .tab-button.active { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; 
@@ -596,7 +598,8 @@
         @media (max-width: 640px) {
             .tab-navigation { gap: 4px; padding: 8px; }
             .tab-button { padding: 10px 6px; font-size: 0.7rem; flex-direction: column; gap: 4px; }
-            .tab-button span:last-child { font-size: 0.65rem; }
+            .tab-text-full { display: inline; font-size: 0.68rem; }
+            .tab-text-short { display: none; }
             .tab-number { width: 18px; height: 18px; font-size: 0.7rem; }
             .tab-content { padding: 20px; }
             .step-instruction { padding: 16px; }
@@ -614,7 +617,8 @@
             .instruction-grid { grid-template-columns: 1fr; gap: 16px; }
             .tab-navigation { gap: 4px; padding: 6px; }
             .tab-button { padding: 10px 6px; gap: 4px; font-size: 0.7rem; flex-direction: column; }
-            .tab-button span:last-child { font-size: 0.6rem; display: block; line-height: 1.2; }
+            .tab-text-full { display: none; }
+            .tab-text-short { display: inline; font-size: 0.62rem; line-height: 1.2; }
             .tab-number { width: 18px; height: 18px; font-size: 0.7rem; }
             .header { padding: 20px 10px; }
             .title { font-size: 1.8rem; }
@@ -633,7 +637,7 @@
             .tab-content { padding: 16px; }
             .tab-navigation { padding: 5px; gap: 3px; }
             .tab-button { padding: 8px 4px; gap: 3px; }
-            .tab-button span:last-child { font-size: 0.55rem; }
+            .tab-text-short { font-size: 0.55rem; }
             .tab-number { width: 16px; height: 16px; font-size: 0.65rem; }
             .nav-btn { padding: 12px 16px; font-size: 0.85rem; }
             .preset-btn .preset-name { font-size: 0.8rem; }
@@ -660,23 +664,28 @@
         <nav class="tab-navigation">
             <button class="tab-button active" onclick="showTab(1)" id="tab-btn-1">
                 <span class="tab-number">1</span>
-                <span>Your Site</span>
+                <span class="tab-text-full">Your Site</span>
+                <span class="tab-text-short">Site</span>
             </button>
             <button class="tab-button" onclick="showTab(2)" id="tab-btn-2">
                 <span class="tab-number">2</span>
-                <span>Current Mix</span>
+                <span class="tab-text-full">Current Mix</span>
+                <span class="tab-text-short">Current</span>
             </button>
             <button class="tab-button" onclick="showTab(3)" id="tab-btn-3">
                 <span class="tab-number">3</span>
-                <span>With instarinse®</span>
+                <span class="tab-text-full">With instarinse®</span>
+                <span class="tab-text-short">instarinse®</span>
             </button>
             <button class="tab-button" onclick="showTab(4)" id="tab-btn-4">
                 <span class="tab-number">4</span>
-                <span>Fine-tune</span>
+                <span class="tab-text-full">Fine-tune</span>
+                <span class="tab-text-short">Settings</span>
             </button>
             <button class="tab-button green" onclick="showTab(5)" id="tab-btn-5">
                 <span class="tab-number">5</span>
-                <span>Annual Impact</span>
+                <span class="tab-text-full">Annual Impact</span>
+                <span class="tab-text-short">Impact</span>
             </button>
         </nav>
 
