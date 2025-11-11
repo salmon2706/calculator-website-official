@@ -1705,34 +1705,53 @@
         }
         
         function resetTab4() {
-            // Reset all assumptions to defaults
-            Object.assign(GLOBAL_ASSUMPTIONS, JSON.parse(JSON.stringify(DEFAULT_ASSUMPTIONS)));
+            // FORCE reset all assumptions to hardcoded defaults
+            GLOBAL_ASSUMPTIONS.paperCup.cost = 0.28;
+            GLOBAL_ASSUMPTIONS.paperCup.water = 0.25;
+            GLOBAL_ASSUMPTIONS.paperCup.energy = 0.06;
+            GLOBAL_ASSUMPTIONS.paperCup.co2 = 0.01;
+            GLOBAL_ASSUMPTIONS.handwash.waterPerCup = 1.0;
+            GLOBAL_ASSUMPTIONS.handwash.energyPerCup = 0.08;
+            GLOBAL_ASSUMPTIONS.handwash.detergentPerCup = 0.01;
+            GLOBAL_ASSUMPTIONS.handwash.co2PerCup = 0.02;
+            GLOBAL_ASSUMPTIONS.dishwasher.capacity = 40;
+            GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad = 13.2;
+            GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad = 0.9;
+            GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad = 0.16;
+            GLOBAL_ASSUMPTIONS.dishwasher.labourTimePerLoad = 10;
+            GLOBAL_ASSUMPTIONS.dishwasher.detergentPerLoad = 0.15;
+            GLOBAL_ASSUMPTIONS.electricityRate = 0.25;
+            GLOBAL_ASSUMPTIONS.labourRate = 12.21;
+            
+            // Clear modification tracking
             modifiedAssumptions.clear();
             
             // Update all assumption input fields
-            document.getElementById('paperCupCost').value = DEFAULT_ASSUMPTIONS.paperCup.cost;
-            document.getElementById('paperCupWater').value = DEFAULT_ASSUMPTIONS.paperCup.water;
-            document.getElementById('paperCupEnergy').value = DEFAULT_ASSUMPTIONS.paperCup.energy;
-            document.getElementById('paperCupCo2').value = DEFAULT_ASSUMPTIONS.paperCup.co2;
-            document.getElementById('handwashWater').value = DEFAULT_ASSUMPTIONS.handwash.waterPerCup;
-            document.getElementById('handwashEnergy').value = DEFAULT_ASSUMPTIONS.handwash.energyPerCup;
-            document.getElementById('handwashDetergent').value = DEFAULT_ASSUMPTIONS.handwash.detergentPerCup;
-            document.getElementById('handwashCo2').value = DEFAULT_ASSUMPTIONS.handwash.co2PerCup;
-            document.getElementById('dishwasherCapacity').value = DEFAULT_ASSUMPTIONS.dishwasher.capacity;
-            document.getElementById('dishwasherWater').value = DEFAULT_ASSUMPTIONS.dishwasher.waterPerLoad;
-            document.getElementById('dishwasherEnergy').value = DEFAULT_ASSUMPTIONS.dishwasher.energyPerLoad;
-            document.getElementById('dishwasherCo2').value = DEFAULT_ASSUMPTIONS.dishwasher.co2PerLoad;
-            document.getElementById('dishwasherLabour').value = DEFAULT_ASSUMPTIONS.dishwasher.labourTimePerLoad;
-            document.getElementById('dishwasherDetergent').value = DEFAULT_ASSUMPTIONS.dishwasher.detergentPerLoad;
-            document.getElementById('electricityRate').value = DEFAULT_ASSUMPTIONS.electricityRate;
-            document.getElementById('labourRate').value = DEFAULT_ASSUMPTIONS.labourRate;
+            document.getElementById('paperCupCost').value = 0.28;
+            document.getElementById('paperCupWater').value = 0.25;
+            document.getElementById('paperCupEnergy').value = 0.06;
+            document.getElementById('paperCupCo2').value = 0.01;
+            document.getElementById('handwashWater').value = 1.0;
+            document.getElementById('handwashEnergy').value = 0.08;
+            document.getElementById('handwashDetergent').value = 0.01;
+            document.getElementById('handwashCo2').value = 0.02;
+            document.getElementById('dishwasherCapacity').value = 40;
+            document.getElementById('dishwasherWater').value = 13.2;
+            document.getElementById('dishwasherEnergy').value = 0.9;
+            document.getElementById('dishwasherCo2').value = 0.16;
+            document.getElementById('dishwasherLabour').value = 10;
+            document.getElementById('dishwasherDetergent').value = 0.15;
+            document.getElementById('electricityRate').value = 0.25;
+            document.getElementById('labourRate').value = 12.21;
             
             // Remove modified class from all inputs
             document.querySelectorAll('.assumption-input').forEach(input => {
                 input.classList.remove('modified');
             });
             
-            updateCalculations();
+            // Force recalculation with new defaults
+            updatePerCupCosts();
+            calculateSavings();
         }
         
         // Preset Scenarios Function
