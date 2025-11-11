@@ -1194,6 +1194,16 @@
                 </button>
             </div>
             
+            <div style="background: linear-gradient(135deg, rgba(144, 212, 246, 0.1), rgba(144, 212, 246, 0.05)); border-radius: 20px; padding: 40px; margin-top: 30px; text-align: center; border: 2px solid rgba(144, 212, 246, 0.3); box-shadow: 0 4px 16px rgba(144, 212, 246, 0.15);">
+                <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 12px;">📤 Share Your Results</h3>
+                <p style="color: var(--neutral-600); margin-bottom: 24px; line-height: 1.5; font-size: 0.95rem;">Want to share these calculations with colleagues? Copy this link to send them your exact scenario. When they click it, they'll see your Annual Impact results with all your inputs pre-filled!</p>
+                <div style="background: var(--white); padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; border: 1px solid var(--neutral-200); word-break: break-all; font-family: monospace; font-size: 0.85rem; color: var(--neutral-700); text-align: left;" id="shareURLDisplay"></div>
+                <button id="copyLinkBtn" onclick="copyShareURL()" style="background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border: none; padding: 16px 32px; border-radius: 12px; font-weight: 600; cursor: pointer; font-size: 1rem; transition: all 0.3s; box-shadow: 0 4px 16px rgba(144, 212, 246, 0.3);" onmouseover="this.style.transform='translateY(-2px) scale(1.05)'; this.style.boxShadow='0 6px 20px rgba(144, 212, 246, 0.4)'" onmouseout="this.style.transform=''; this.style.boxShadow='0 4px 16px rgba(144, 212, 246, 0.3)'">
+                    📋 Copy Link to Clipboard
+                </button>
+                <p id="copyFeedback" style="display: none; color: #166534; margin-top: 16px; font-weight: 600; font-size: 0.95rem;">✓ Link copied! Share it with your colleagues</p>
+            </div>
+            
             <div class="tab-navigation-buttons">
                 <button class="nav-btn" onclick="showTab(4)">← Previous: Fine-tune</button>
                 <button class="nav-btn" onclick="showTab(1)">Start Over 🔄</button>
@@ -1417,8 +1427,166 @@
             const selectedButton = document.getElementById(`tab-btn-${tabNumber}`);
             if (selectedButton) selectedButton.classList.add('active');
             
+            // Update share URL if showing Tab 5
+            if (tabNumber === 5) {
+                const shareURLDisplay = document.getElementById('shareURLDisplay');
+                if (shareURLDisplay) {
+                    shareURLDisplay.textContent = generateShareURL();
+                }
+            }
+            
             // Scroll to top of calculator
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Generate Share URL Function
+        function generateShareURL() {
+            const params = {
+                tab: '5',
+                team: state.teamSize,
+                days: state.officeDays,
+                cups: state.cupsPerDay,
+                cp: state.current.paper,
+                ch: state.current.handwash,
+                cd: state.current.dishwasher,
+                op: state.optimal.paper,
+                oi: state.optimal.instarinse,
+                oh: state.optimal.handwash,
+                od: state.optimal.dishwasher
+            };
+            
+            // Add modified assumptions to URL
+            if (modifiedAssumptions.has('paperCupCost')) params.pcc = GLOBAL_ASSUMPTIONS.paperCup.cost;
+            if (modifiedAssumptions.has('paperCupWater')) params.pcw = GLOBAL_ASSUMPTIONS.paperCup.water;
+            if (modifiedAssumptions.has('paperCupEnergy')) params.pce = GLOBAL_ASSUMPTIONS.paperCup.energy;
+            if (modifiedAssumptions.has('paperCupCo2')) params.pc2 = GLOBAL_ASSUMPTIONS.paperCup.co2;
+            if (modifiedAssumptions.has('handwashWater')) params.hww = GLOBAL_ASSUMPTIONS.handwash.waterPerCup;
+            if (modifiedAssumptions.has('handwashEnergy')) params.hwe = GLOBAL_ASSUMPTIONS.handwash.energyPerCup;
+            if (modifiedAssumptions.has('handwashDetergent')) params.hwd = GLOBAL_ASSUMPTIONS.handwash.detergentPerCup;
+            if (modifiedAssumptions.has('handwashCo2')) params.hw2 = GLOBAL_ASSUMPTIONS.handwash.co2PerCup;
+            if (modifiedAssumptions.has('dishwasherCapacity')) params.dwc = GLOBAL_ASSUMPTIONS.dishwasher.capacity;
+            if (modifiedAssumptions.has('dishwasherWater')) params.dww = GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad;
+            if (modifiedAssumptions.has('dishwasherEnergy')) params.dwe = GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad;
+            if (modifiedAssumptions.has('dishwasherCo2')) params.dw2 = GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad;
+            if (modifiedAssumptions.has('dishwasherLabour')) params.dwl = GLOBAL_ASSUMPTIONS.dishwasher.labourTimePerLoad;
+            if (modifiedAssumptions.has('dishwasherDetergent')) params.dwd = GLOBAL_ASSUMPTIONS.dishwasher.detergentPerLoad;
+            if (modifiedAssumptions.has('electricityRate')) params.elec = GLOBAL_ASSUMPTIONS.electricityRate;
+            if (modifiedAssumptions.has('labourRate')) params.lab = GLOBAL_ASSUMPTIONS.labourRate;
+            
+            const urlParams = new URLSearchParams(params);
+            return window.location.origin + window.location.pathname + '?' + urlParams.toString();
+        }
+        
+        // Copy Share URL to Clipboard
+        function copyShareURL() {
+            const url = generateShareURL();
+            navigator.clipboard.writeText(url).then(() => {
+                const btn = document.getElementById('copyLinkBtn');
+                const feedback = document.getElementById('copyFeedback');
+                if (btn && feedback) {
+                    btn.textContent = '✓ Copied!';
+                    btn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+                    feedback.style.display = 'block';
+                    setTimeout(() => {
+                        btn.textContent = '📋 Copy Link to Clipboard';
+                        btn.style.background = '';
+                        feedback.style.display = 'none';
+                    }, 3000);
+                }
+            }).catch(err => {
+                alert('Failed to copy. Please select and copy the URL manually.');
+            });
+        }
+        
+        // Load From URL Parameters
+        function loadFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if (!urlParams.has('team')) return; // No parameters, use defaults
+            
+            // Load basic state
+            if (urlParams.has('team')) state.teamSize = parseInt(urlParams.get('team'));
+            if (urlParams.has('days')) state.officeDays = parseInt(urlParams.get('days'));
+            if (urlParams.has('cups')) state.cupsPerDay = parseFloat(urlParams.get('cups'));
+            
+            // Load current mix
+            if (urlParams.has('cp')) state.current.paper = parseInt(urlParams.get('cp'));
+            if (urlParams.has('ch')) state.current.handwash = parseInt(urlParams.get('ch'));
+            if (urlParams.has('cd')) state.current.dishwasher = parseInt(urlParams.get('cd'));
+            
+            // Load optimal mix
+            if (urlParams.has('op')) state.optimal.paper = parseInt(urlParams.get('op'));
+            if (urlParams.has('oi')) state.optimal.instarinse = parseInt(urlParams.get('oi'));
+            if (urlParams.has('oh')) state.optimal.handwash = parseInt(urlParams.get('oh'));
+            if (urlParams.has('od')) state.optimal.dishwasher = parseInt(urlParams.get('od'));
+            
+            // Load modified assumptions
+            if (urlParams.has('pcc')) { GLOBAL_ASSUMPTIONS.paperCup.cost = parseFloat(urlParams.get('pcc')); modifiedAssumptions.add('paperCupCost'); }
+            if (urlParams.has('pcw')) { GLOBAL_ASSUMPTIONS.paperCup.water = parseFloat(urlParams.get('pcw')); modifiedAssumptions.add('paperCupWater'); }
+            if (urlParams.has('pce')) { GLOBAL_ASSUMPTIONS.paperCup.energy = parseFloat(urlParams.get('pce')); modifiedAssumptions.add('paperCupEnergy'); }
+            if (urlParams.has('pc2')) { GLOBAL_ASSUMPTIONS.paperCup.co2 = parseFloat(urlParams.get('pc2')); modifiedAssumptions.add('paperCupCo2'); }
+            if (urlParams.has('hww')) { GLOBAL_ASSUMPTIONS.handwash.waterPerCup = parseFloat(urlParams.get('hww')); modifiedAssumptions.add('handwashWater'); }
+            if (urlParams.has('hwe')) { GLOBAL_ASSUMPTIONS.handwash.energyPerCup = parseFloat(urlParams.get('hwe')); modifiedAssumptions.add('handwashEnergy'); }
+            if (urlParams.has('hwd')) { GLOBAL_ASSUMPTIONS.handwash.detergentPerCup = parseFloat(urlParams.get('hwd')); modifiedAssumptions.add('handwashDetergent'); }
+            if (urlParams.has('hw2')) { GLOBAL_ASSUMPTIONS.handwash.co2PerCup = parseFloat(urlParams.get('hw2')); modifiedAssumptions.add('handwashCo2'); }
+            if (urlParams.has('dwc')) { GLOBAL_ASSUMPTIONS.dishwasher.capacity = parseFloat(urlParams.get('dwc')); modifiedAssumptions.add('dishwasherCapacity'); }
+            if (urlParams.has('dww')) { GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad = parseFloat(urlParams.get('dww')); modifiedAssumptions.add('dishwasherWater'); }
+            if (urlParams.has('dwe')) { GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad = parseFloat(urlParams.get('dwe')); modifiedAssumptions.add('dishwasherEnergy'); }
+            if (urlParams.has('dw2')) { GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad = parseFloat(urlParams.get('dw2')); modifiedAssumptions.add('dishwasherCo2'); }
+            if (urlParams.has('dwl')) { GLOBAL_ASSUMPTIONS.dishwasher.labourTimePerLoad = parseFloat(urlParams.get('dwl')); modifiedAssumptions.add('dishwasherLabour'); }
+            if (urlParams.has('dwd')) { GLOBAL_ASSUMPTIONS.dishwasher.detergentPerLoad = parseFloat(urlParams.get('dwd')); modifiedAssumptions.add('dishwasherDetergent'); }
+            if (urlParams.has('elec')) { GLOBAL_ASSUMPTIONS.electricityRate = parseFloat(urlParams.get('elec')); modifiedAssumptions.add('electricityRate'); }
+            if (urlParams.has('lab')) { GLOBAL_ASSUMPTIONS.labourRate = parseFloat(urlParams.get('lab')); modifiedAssumptions.add('labourRate'); }
+            
+            // Update all form inputs
+            els.teamSize.value = state.teamSize;
+            els.officeDays.value = state.officeDays;
+            els.cupsPerDay.value = state.cupsPerDay;
+            
+            els.currentPaper.value = state.current.paper;
+            els.currentHandwash.value = state.current.handwash;
+            els.currentDishwasher.value = state.current.dishwasher;
+            
+            els.optimalPaper.value = state.optimal.paper;
+            els.optimalInstarinse.value = state.optimal.instarinse;
+            els.optimalHandwash.value = state.optimal.handwash;
+            els.optimalDishwasher.value = state.optimal.dishwasher;
+            
+            // Update all assumption inputs if modified
+            if (modifiedAssumptions.has('paperCupCost')) document.getElementById('paperCupCost').value = GLOBAL_ASSUMPTIONS.paperCup.cost;
+            if (modifiedAssumptions.has('paperCupWater')) document.getElementById('paperCupWater').value = GLOBAL_ASSUMPTIONS.paperCup.water;
+            if (modifiedAssumptions.has('paperCupEnergy')) document.getElementById('paperCupEnergy').value = GLOBAL_ASSUMPTIONS.paperCup.energy;
+            if (modifiedAssumptions.has('paperCupCo2')) document.getElementById('paperCupCo2').value = GLOBAL_ASSUMPTIONS.paperCup.co2;
+            if (modifiedAssumptions.has('handwashWater')) document.getElementById('handwashWater').value = GLOBAL_ASSUMPTIONS.handwash.waterPerCup;
+            if (modifiedAssumptions.has('handwashEnergy')) document.getElementById('handwashEnergy').value = GLOBAL_ASSUMPTIONS.handwash.energyPerCup;
+            if (modifiedAssumptions.has('handwashDetergent')) document.getElementById('handwashDetergent').value = GLOBAL_ASSUMPTIONS.handwash.detergentPerCup;
+            if (modifiedAssumptions.has('handwashCo2')) document.getElementById('handwashCo2').value = GLOBAL_ASSUMPTIONS.handwash.co2PerCup;
+            if (modifiedAssumptions.has('dishwasherCapacity')) document.getElementById('dishwasherCapacity').value = GLOBAL_ASSUMPTIONS.dishwasher.capacity;
+            if (modifiedAssumptions.has('dishwasherWater')) document.getElementById('dishwasherWater').value = GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad;
+            if (modifiedAssumptions.has('dishwasherEnergy')) document.getElementById('dishwasherEnergy').value = GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad;
+            if (modifiedAssumptions.has('dishwasherCo2')) document.getElementById('dishwasherCo2').value = GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad;
+            if (modifiedAssumptions.has('dishwasherLabour')) document.getElementById('dishwasherLabour').value = GLOBAL_ASSUMPTIONS.dishwasher.labourTimePerLoad;
+            if (modifiedAssumptions.has('dishwasherDetergent')) document.getElementById('dishwasherDetergent').value = GLOBAL_ASSUMPTIONS.dishwasher.detergentPerLoad;
+            if (modifiedAssumptions.has('electricityRate')) document.getElementById('electricityRate').value = GLOBAL_ASSUMPTIONS.electricityRate;
+            if (modifiedAssumptions.has('labourRate')) document.getElementById('labourRate').value = GLOBAL_ASSUMPTIONS.labourRate;
+            
+            // Update displays
+            updateDailyUsage();
+            updatePerCupCosts();
+            
+            // Show specified tab
+            const tabNum = parseInt(urlParams.get('tab')) || 5;
+            setTimeout(() => {
+                showTab(tabNum);
+                
+                // Scroll to calculator
+                const calculator = document.querySelector('.calculator');
+                if (calculator) {
+                    setTimeout(() => {
+                        calculator.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                }
+            }, 300);
         }
         
         // Preset Scenarios Function
@@ -1465,6 +1633,9 @@
             current: { paper: 30, handwash: 20, dishwasher: 50 },
             optimal: { paper: 0, instarinse: 70, handwash: 10, dishwasher: 20 }
         };
+        
+        // Track modified assumptions (only save these in URL if changed)
+        const modifiedAssumptions = new Set();
 
         const els = {
             teamSize: document.getElementById('teamSize'),
@@ -1768,6 +1939,23 @@
             GLOBAL_ASSUMPTIONS.electricityRate = parseFloat(document.getElementById('electricityRate')?.value) || DEFAULT_ASSUMPTIONS.electricityRate;
             GLOBAL_ASSUMPTIONS.labourRate = parseFloat(document.getElementById('labourRate')?.value) || DEFAULT_ASSUMPTIONS.labourRate;
             
+            // Track which assumptions were modified
+            if (Math.abs(GLOBAL_ASSUMPTIONS.paperCup.cost - DEFAULT_ASSUMPTIONS.paperCup.cost) > 0.001) modifiedAssumptions.add('paperCupCost');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.paperCup.water - DEFAULT_ASSUMPTIONS.paperCup.water) > 0.001) modifiedAssumptions.add('paperCupWater');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.paperCup.energy - DEFAULT_ASSUMPTIONS.paperCup.energy) > 0.001) modifiedAssumptions.add('paperCupEnergy');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.paperCup.co2 - DEFAULT_ASSUMPTIONS.paperCup.co2) > 0.001) modifiedAssumptions.add('paperCupCo2');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.handwash.waterPerCup - DEFAULT_ASSUMPTIONS.handwash.waterPerCup) > 0.001) modifiedAssumptions.add('handwashWater');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.handwash.energyPerCup - DEFAULT_ASSUMPTIONS.handwash.energyPerCup) > 0.001) modifiedAssumptions.add('handwashEnergy');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.handwash.detergentPerCup - DEFAULT_ASSUMPTIONS.handwash.detergentPerCup) > 0.001) modifiedAssumptions.add('handwashDetergent');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.handwash.co2PerCup - DEFAULT_ASSUMPTIONS.handwash.co2PerCup) > 0.001) modifiedAssumptions.add('handwashCo2');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.dishwasher.capacity - DEFAULT_ASSUMPTIONS.dishwasher.capacity) > 0.001) modifiedAssumptions.add('dishwasherCapacity');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad - DEFAULT_ASSUMPTIONS.dishwasher.waterPerLoad) > 0.001) modifiedAssumptions.add('dishwasherWater');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad - DEFAULT_ASSUMPTIONS.dishwasher.energyPerLoad) > 0.001) modifiedAssumptions.add('dishwasherEnergy');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad - DEFAULT_ASSUMPTIONS.dishwasher.co2PerLoad) > 0.001) modifiedAssumptions.add('dishwasherCo2');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.dishwasher.detergentPerLoad - DEFAULT_ASSUMPTIONS.dishwasher.detergentPerLoad) > 0.001) modifiedAssumptions.add('dishwasherDetergent');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.electricityRate - DEFAULT_ASSUMPTIONS.electricityRate) > 0.001) modifiedAssumptions.add('electricityRate');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.labourRate - DEFAULT_ASSUMPTIONS.labourRate) > 0.001) modifiedAssumptions.add('labourRate');
+            
             document.querySelectorAll('.assumption-input').forEach(input => {
                 const fieldId = input.id;
                 const currentValue = parseFloat(input.value);
@@ -1871,12 +2059,16 @@
 
         window.showTab = showTab;
         window.applyPreset = applyPreset;
+        window.copyShareURL = copyShareURL;
         window.openAssumptions = openAssumptions;
         window.closeAssumptions = closeAssumptions;
         window.updateCalculations = updateCalculations;
         window.resetAssumption = resetAssumption;
         window.toggleBreakdown = toggleBreakdown;
         window.toggleImpactBreakdown = toggleImpactBreakdown;
+        
+        // Load from URL parameters on page load
+        loadFromURL();
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeAssumptions();
