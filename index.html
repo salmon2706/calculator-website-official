@@ -1765,9 +1765,15 @@
                 input.classList.remove('modified');
             });
             
-            // Force recalculation with new defaults
+            // Force complete recalculation with new defaults
             updatePerCupCosts();
-            calculateSavings();
+            updateDailyUsage();
+            
+            // Add small delay to ensure DOM updates, then recalculate
+            setTimeout(() => {
+                updatePerCupCosts();
+                calculateSavings();
+            }, 10);
         }
         
         // Preset Scenarios Function
