@@ -63,14 +63,17 @@
         .tab-content.active { display: block; }
         
         /* Fullscreen Button */
-        .fullscreen-btn { position: fixed; top: 20px; right: 20px; width: 44px; height: 44px; 
-                         background: rgba(255, 255, 255, 0.95); border: 2px solid var(--neutral-200);
-                         border-radius: 50%; cursor: pointer; z-index: 999; transition: all 0.3s;
-                         display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
-                         box-shadow: 0 4px 16px rgba(0,0,0,0.15); backdrop-filter: blur(10px); }
-        .fullscreen-btn:hover { background: var(--primary); border-color: var(--primary); color: white;
-                               transform: scale(1.1); box-shadow: 0 6px 24px rgba(144, 212, 246, 0.4); }
-        .fullscreen-btn.pulse { animation: pulse-fullscreen 2s ease-in-out 3; }
+        .fullscreen-btn { position: fixed; top: 20px; right: 20px; min-width: 44px; height: 44px; 
+                         background: rgba(255, 255, 255, 0.95); border: 2px solid var(--primary);
+                         border-radius: 25px; cursor: pointer; z-index: 999; transition: all 0.3s;
+                         display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1.3rem;
+                         box-shadow: 0 4px 16px rgba(144, 212, 246, 0.3); backdrop-filter: blur(10px);
+                         padding: 0 16px; font-weight: 600; color: var(--primary); }
+        .fullscreen-text { display: inline; font-size: 0.9rem; }
+        .fullscreen-btn:hover { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); 
+                               border-color: var(--primary); color: white;
+                               transform: translateY(-2px) scale(1.05); box-shadow: 0 6px 24px rgba(144, 212, 246, 0.5); }
+        .fullscreen-btn.pulse { animation: pulse-fullscreen 2.5s ease-in-out 3; }
         
         @keyframes pulse-fullscreen {
             0%, 100% { transform: scale(1); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
@@ -104,7 +107,7 @@
         
         /* Navigation Buttons */
         .tab-navigation-buttons { display: flex; justify-content: space-between; align-items: center; gap: 16px; 
-                                 margin-top: 40px; padding-top: 30px; border-top: 2px solid var(--neutral-100); }
+                                 margin-top: 50px; padding-top: 30px; border-top: 2px solid var(--neutral-100); }
         .nav-btn { padding: 14px 28px; border: 2px solid var(--primary); border-radius: 12px; font-weight: 600;
                   font-size: 1rem; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px;
                   background: var(--white); color: var(--primary); box-shadow: 0 2px 8px rgba(144, 212, 246, 0.1); }
@@ -623,7 +626,8 @@
             .tab-button span:last-child { line-height: 1.2; margin-top: auto; }
             .tab-number { width: 20px; height: 20px; font-size: 0.75rem; flex-shrink: 0; margin-top: 2px; }
             .tab-content { padding: 20px 20px 60px 20px; }
-            .fullscreen-btn { width: 40px; height: 40px; top: 15px; right: 15px; font-size: 1.2rem; }
+            .fullscreen-btn { width: 40px; height: 40px; top: 15px; right: 15px; font-size: 1.2rem; padding: 0; border-radius: 50%; }
+            .fullscreen-text { display: none; }
             .step-instruction { padding: 16px; }
             .step-instruction h3 { font-size: 1rem; }
             .step-instruction p { font-size: 0.9rem; }
@@ -643,7 +647,8 @@
             .tab-number { width: 19px; height: 19px; font-size: 0.72rem; flex-shrink: 0; margin-top: 2px; }
             .header { padding: 20px 10px; }
             .title { font-size: 1.8rem; }
-            .fullscreen-btn { width: 38px; height: 38px; top: 12px; right: 12px; font-size: 1.1rem; }
+            .fullscreen-btn { width: 38px; height: 38px; top: 12px; right: 12px; font-size: 1.1rem; padding: 0; border-radius: 50%; }
+            .fullscreen-text { display: none; }
             .nav-btn { padding: 14px 20px; font-size: 0.9rem; }
             .preset-buttons { grid-template-columns: repeat(2, 1fr); }
             .preset-btn { padding: 10px 12px; }
@@ -661,7 +666,8 @@
             .tab-button { padding: 10px 3px 10px 3px; gap: 4px; font-size: 0.57rem; height: 60px; align-items: center; justify-content: flex-start; }
             .tab-button span:last-child { line-height: 1.1; margin-top: auto; }
             .tab-number { width: 18px; height: 18px; font-size: 0.7rem; flex-shrink: 0; margin-top: 2px; }
-            .fullscreen-btn { width: 36px; height: 36px; top: 10px; right: 10px; font-size: 1rem; }
+            .fullscreen-btn { width: 36px; height: 36px; top: 10px; right: 10px; font-size: 1rem; padding: 0; border-radius: 50%; }
+            .fullscreen-text { display: none; }
             .nav-btn { padding: 12px 16px; font-size: 0.85rem; }
             .preset-btn .preset-name { font-size: 0.8rem; }
             .preset-btn .preset-mix { font-size: 0.65rem; }
@@ -682,7 +688,8 @@
         <!-- Fullscreen Button -->
         <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Open in Fullscreen">
             <span id="fullscreenIcon">⛶</span>
-            <span class="fullscreen-tooltip">Open Fullscreen</span>
+            <span class="fullscreen-text" id="fullscreenText">Go Fullscreen</span>
+            <span class="fullscreen-tooltip">Better experience in fullscreen!</span>
         </button>
         
         <header class="header">
@@ -1566,6 +1573,7 @@
         function toggleFullscreen() {
             const elem = document.documentElement;
             const icon = document.getElementById('fullscreenIcon');
+            const text = document.getElementById('fullscreenText');
             const tooltip = document.querySelector('.fullscreen-tooltip');
             
             if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
@@ -1580,7 +1588,8 @@
                     elem.msRequestFullscreen();
                 }
                 icon.textContent = '✕';
-                tooltip.textContent = 'Exit Fullscreen';
+                text.textContent = 'Exit Fullscreen';
+                tooltip.textContent = 'Press ESC or click to exit';
             } else {
                 // Exit fullscreen
                 if (document.exitFullscreen) {
@@ -1593,7 +1602,8 @@
                     document.msExitFullscreen();
                 }
                 icon.textContent = '⛶';
-                tooltip.textContent = 'Open Fullscreen';
+                text.textContent = 'Go Fullscreen';
+                tooltip.textContent = 'Better experience in fullscreen!';
             }
         }
         
@@ -1604,14 +1614,17 @@
         
         function updateFullscreenButton() {
             const icon = document.getElementById('fullscreenIcon');
+            const text = document.getElementById('fullscreenText');
             const tooltip = document.querySelector('.fullscreen-tooltip');
             
             if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement) {
                 icon.textContent = '✕';
-                tooltip.textContent = 'Exit Fullscreen';
+                text.textContent = 'Exit Fullscreen';
+                tooltip.textContent = 'Press ESC or click to exit';
             } else {
                 icon.textContent = '⛶';
-                tooltip.textContent = 'Open Fullscreen';
+                text.textContent = 'Go Fullscreen';
+                tooltip.textContent = 'Better experience in fullscreen!';
             }
         }
         
