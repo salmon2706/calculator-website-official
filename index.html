@@ -58,9 +58,31 @@
         .tab-button.active .tab-number { background: rgba(255,255,255,0.25); color: white; }
         
         /* Tab Content */
-        .tab-content { display: none; background: var(--white); border-radius: 20px; padding: 40px 40px 50px 40px;
+        .tab-content { display: none; background: var(--white); border-radius: 20px; padding: 40px 40px 60px 40px;
                       border: 1px solid var(--neutral-200); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         .tab-content.active { display: block; }
+        
+        /* Fullscreen Button */
+        .fullscreen-btn { position: fixed; top: 20px; right: 20px; width: 44px; height: 44px; 
+                         background: rgba(255, 255, 255, 0.95); border: 2px solid var(--neutral-200);
+                         border-radius: 50%; cursor: pointer; z-index: 999; transition: all 0.3s;
+                         display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+                         box-shadow: 0 4px 16px rgba(0,0,0,0.15); backdrop-filter: blur(10px); }
+        .fullscreen-btn:hover { background: var(--primary); border-color: var(--primary); color: white;
+                               transform: scale(1.1); box-shadow: 0 6px 24px rgba(144, 212, 246, 0.4); }
+        .fullscreen-btn.pulse { animation: pulse-fullscreen 2s ease-in-out 3; }
+        
+        @keyframes pulse-fullscreen {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+            50% { transform: scale(1.15); box-shadow: 0 6px 24px rgba(144, 212, 246, 0.5), 0 0 0 8px rgba(144, 212, 246, 0.2); }
+        }
+        
+        .fullscreen-tooltip { position: absolute; bottom: -40px; right: 0; background: var(--neutral-900); color: white;
+                            padding: 8px 12px; border-radius: 8px; font-size: 0.8rem; white-space: nowrap;
+                            opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .fullscreen-btn:hover .fullscreen-tooltip { opacity: 1; }
+        .fullscreen-tooltip::before { content: ''; position: absolute; bottom: 100%; right: 16px;
+                                     border: 6px solid transparent; border-bottom-color: var(--neutral-900); }
         
         .step-instruction { background: linear-gradient(135deg, rgba(144, 212, 246, 0.08), rgba(144, 212, 246, 0.03)); 
                            padding: 20px; border-radius: 12px; margin-bottom: 30px; border: 1px solid rgba(144, 212, 246, 0.2); }
@@ -600,7 +622,8 @@
                          white-space: normal; height: 68px; text-align: center; align-items: center; justify-content: flex-start; }
             .tab-button span:last-child { line-height: 1.2; margin-top: auto; }
             .tab-number { width: 20px; height: 20px; font-size: 0.75rem; flex-shrink: 0; margin-top: 2px; }
-            .tab-content { padding: 20px; }
+            .tab-content { padding: 20px 20px 40px 20px; }
+            .fullscreen-btn { width: 40px; height: 40px; top: 15px; right: 15px; font-size: 1.2rem; }
             .step-instruction { padding: 16px; }
             .step-instruction h3 { font-size: 1rem; }
             .step-instruction p { font-size: 0.9rem; }
@@ -620,6 +643,7 @@
             .tab-number { width: 19px; height: 19px; font-size: 0.72rem; flex-shrink: 0; margin-top: 2px; }
             .header { padding: 20px 10px; }
             .title { font-size: 1.8rem; }
+            .fullscreen-btn { width: 38px; height: 38px; top: 12px; right: 12px; font-size: 1.1rem; }
             .nav-btn { padding: 14px 20px; font-size: 0.9rem; }
             .preset-buttons { grid-template-columns: repeat(2, 1fr); }
             .preset-btn { padding: 10px 12px; }
@@ -637,6 +661,7 @@
             .tab-button { padding: 10px 3px 10px 3px; gap: 4px; font-size: 0.57rem; height: 60px; align-items: center; justify-content: flex-start; }
             .tab-button span:last-child { line-height: 1.1; margin-top: auto; }
             .tab-number { width: 18px; height: 18px; font-size: 0.7rem; flex-shrink: 0; margin-top: 2px; }
+            .fullscreen-btn { width: 36px; height: 36px; top: 10px; right: 10px; font-size: 1rem; }
             .nav-btn { padding: 12px 16px; font-size: 0.85rem; }
             .preset-btn .preset-name { font-size: 0.8rem; }
             .preset-btn .preset-mix { font-size: 0.65rem; }
@@ -654,6 +679,12 @@
 </head>
 <body>
     <div class="calculator">
+        <!-- Fullscreen Button -->
+        <button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Open in Fullscreen">
+            <span id="fullscreenIcon">⛶</span>
+            <span class="fullscreen-tooltip">Open Fullscreen</span>
+        </button>
+        
         <header class="header">
             <h1 class="title">Calculate your savings</h1>
         </header>
@@ -1531,6 +1562,76 @@
     </div>
 
     <script>
+        // Fullscreen Functionality
+        function toggleFullscreen() {
+            const elem = document.documentElement;
+            const icon = document.getElementById('fullscreenIcon');
+            const tooltip = document.querySelector('.fullscreen-tooltip');
+            
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
+                // Enter fullscreen
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                } else if (elem.mozRequestFullScreen) {
+                    elem.mozRequestFullScreen();
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
+                }
+                icon.textContent = '✕';
+                tooltip.textContent = 'Exit Fullscreen';
+            } else {
+                // Exit fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+                icon.textContent = '⛶';
+                tooltip.textContent = 'Open Fullscreen';
+            }
+        }
+        
+        // Listen for fullscreen changes (ESC key exit)
+        document.addEventListener('fullscreenchange', updateFullscreenButton);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+        document.addEventListener('mozfullscreenchange', updateFullscreenButton);
+        
+        function updateFullscreenButton() {
+            const icon = document.getElementById('fullscreenIcon');
+            const tooltip = document.querySelector('.fullscreen-tooltip');
+            
+            if (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement) {
+                icon.textContent = '✕';
+                tooltip.textContent = 'Exit Fullscreen';
+            } else {
+                icon.textContent = '⛶';
+                tooltip.textContent = 'Open Fullscreen';
+            }
+        }
+        
+        // One-time pulse animation on first load
+        window.addEventListener('load', function() {
+            const hasSeenPulse = localStorage.getItem('fullscreenPulseSeen');
+            if (!hasSeenPulse) {
+                const btn = document.getElementById('fullscreenBtn');
+                setTimeout(() => {
+                    btn.classList.add('pulse');
+                    localStorage.setItem('fullscreenPulseSeen', 'true');
+                    
+                    // Remove pulse class after animation
+                    setTimeout(() => {
+                        btn.classList.remove('pulse');
+                    }, 6000);
+                }, 1000);
+            }
+        });
+        
         // Check if current tab has valid percentages
         function canLeaveCurrentTab() {
             const currentActiveTab = document.querySelector('.tab-content.active');
@@ -2334,6 +2435,7 @@
         els.optimalHandwash.addEventListener('input', (e) => { state.optimal.handwash = parseInt(e.target.value); updateSliderDisplay('optimal'); });
         els.optimalDishwasher.addEventListener('input', (e) => { state.optimal.dishwasher = parseInt(e.target.value); updateSliderDisplay('optimal'); });
 
+        window.toggleFullscreen = toggleFullscreen;
         window.showTab = showTab;
         window.applyPreset = applyPreset;
         window.copyShareURL = copyShareURL;
