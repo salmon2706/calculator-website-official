@@ -1572,25 +1572,44 @@
     <script>
         // Fullscreen Functionality
         function toggleFullscreen() {
-            const elem = document.documentElement;
+            // Try to fullscreen the document (works if allowfullscreen is set on iframe)
+            let elem = document.documentElement;
             const icon = document.getElementById('fullscreenIcon');
             const text = document.getElementById('fullscreenText');
             const tooltip = document.querySelector('.fullscreen-tooltip');
             
+            // Check if we're in an iframe without allowfullscreen - try parent instead
+            if (window.self !== window.top) {
+                // We're in an iframe - try to message parent to go fullscreen
+                try {
+                    window.parent.postMessage({ action: 'requestFullscreen' }, '*');
+                } catch (e) {
+                    // Fallback: open in new window if fullscreen blocked
+                    window.open(window.location.href, '_blank');
+                    return;
+                }
+            }
+            
             if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
                 // Enter fullscreen
-                if (elem.requestFullscreen) {
-                    elem.requestFullscreen();
-                } else if (elem.webkitRequestFullscreen) {
-                    elem.webkitRequestFullscreen();
-                } else if (elem.mozRequestFullScreen) {
-                    elem.mozRequestFullScreen();
-                } else if (elem.msRequestFullscreen) {
-                    elem.msRequestFullscreen();
+                const fullscreenPromise = elem.requestFullscreen ? elem.requestFullscreen() :
+                                         elem.webkitRequestFullscreen ? elem.webkitRequestFullscreen() :
+                                         elem.mozRequestFullScreen ? elem.mozRequestFullScreen() :
+                                         elem.msRequestFullscreen ? elem.msRequestFullscreen() : null;
+                
+                if (fullscreenPromise) {
+                    fullscreenPromise.then(() => {
+                        icon.textContent = '✕';
+                        text.textContent = 'Exit Fullscreen';
+                        tooltip.textContent = 'Press ESC or click to exit';
+                    }).catch((err) => {
+                        // Fullscreen blocked - open in new tab instead
+                        window.open(window.location.href, '_blank');
+                    });
+                } else {
+                    // Fullscreen not supported - open in new tab
+                    window.open(window.location.href, '_blank');
                 }
-                icon.textContent = '✕';
-                text.textContent = 'Exit Fullscreen';
-                tooltip.textContent = 'Press ESC or click to exit';
             } else {
                 // Exit fullscreen
                 if (document.exitFullscreen) {
