@@ -187,9 +187,16 @@
         .preset-btn .preset-name { font-size: 0.9rem; font-weight: 600; }
         .preset-btn .preset-mix { font-size: 0.7rem; color: var(--neutral-500); margin-top: 2px; }
         
-        .validation { margin-top: 16px; padding: 12px 20px; border-radius: 10px; font-weight: 500; text-align: center; }
-        .valid { background: rgba(48, 209, 88, 0.1); color: #1B7B3A; border: 1px solid rgba(48, 209, 88, 0.2); }
-        .invalid { background: rgba(255, 105, 97, 0.1); color: #D1242F; border: 1px solid rgba(255, 105, 97, 0.2); }
+        .validation { margin-top: 24px; padding: 16px 24px; border-radius: 12px; font-weight: 600; text-align: center; 
+                     font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .valid { background: linear-gradient(135deg, rgba(48, 209, 88, 0.15), rgba(48, 209, 88, 0.08)); 
+                color: #166534; border: 2px solid rgba(48, 209, 88, 0.4); 
+                box-shadow: 0 4px 12px rgba(48, 209, 88, 0.2); }
+        .valid::before { content: '✓'; font-size: 1.3rem; font-weight: 700; }
+        .invalid { background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.08)); 
+                  color: #991b1b; border: 2px solid rgba(239, 68, 68, 0.4);
+                  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); }
+        .invalid::before { content: '⚠'; font-size: 1.3rem; }
         
         .comparisons-section { background: var(--white); border-radius: 24px; padding: 50px; margin: 60px 0;
                               box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); border: 1px solid var(--neutral-200); 
@@ -589,6 +596,8 @@
             .preset-btn .preset-mix { font-size: 0.65rem; }
             .assumptions-callout h4 { font-size: 1rem; }
             .assumptions-callout p { font-size: 0.85rem; }
+            .validation { font-size: 0.9rem; padding: 12px 16px; }
+            .valid::before, .invalid::before { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -718,7 +727,7 @@
                 </div>
             </div>
             
-            <div class="validation" id="currentValidation">Adjust to total 100%</div>
+            <div class="validation invalid" id="currentValidation">Total is 100% - you're all set!</div>
             
             <div class="tab-navigation-buttons">
                 <button class="nav-btn" onclick="showTab(1)">← Previous: Your Site</button>
@@ -736,30 +745,30 @@
             <div class="preset-scenarios">
                 <p class="preset-title">Quick Start: Choose Your Site Type</p>
                 <div class="preset-buttons">
-                    <button class="preset-btn" onclick="applyPreset('university')">
-                        <span class="preset-icon">🎓</span>
-                        <span class="preset-name">University</span>
-                        <span class="preset-mix">90% instarinse®</span>
-                    </button>
                     <button class="preset-btn" onclick="applyPreset('cafe')">
                         <span class="preset-icon">☕</span>
                         <span class="preset-name">Café</span>
                         <span class="preset-mix">70% instarinse®</span>
-                    </button>
-                    <button class="preset-btn" onclick="applyPreset('office')">
-                        <span class="preset-icon">🏢</span>
-                        <span class="preset-name">Office</span>
-                        <span class="preset-mix">80% instarinse®</span>
                     </button>
                     <button class="preset-btn" onclick="applyPreset('hospital')">
                         <span class="preset-icon">🏥</span>
                         <span class="preset-name">Hospital</span>
                         <span class="preset-mix">60% instarinse®</span>
                     </button>
+                    <button class="preset-btn" onclick="applyPreset('office')">
+                        <span class="preset-icon">🏢</span>
+                        <span class="preset-name">Office</span>
+                        <span class="preset-mix">80% instarinse®</span>
+                    </button>
                     <button class="preset-btn" onclick="applyPreset('school')">
                         <span class="preset-icon">🏫</span>
                         <span class="preset-name">School</span>
                         <span class="preset-mix">75% instarinse®</span>
+                    </button>
+                    <button class="preset-btn" onclick="applyPreset('university')">
+                        <span class="preset-icon">🎓</span>
+                        <span class="preset-name">University</span>
+                        <span class="preset-mix">90% instarinse®</span>
                     </button>
                 </div>
             </div>
@@ -827,7 +836,7 @@
                 </div>
             </div>
             
-            <div class="validation" id="optimalValidation">Adjust to total 100%</div>
+            <div class="validation valid" id="optimalValidation">Perfect! Your percentages add up to 100%</div>
             
             <div class="tab-navigation-buttons">
                 <button class="nav-btn" onclick="showTab(2)">← Previous: Current Mix</button>
@@ -1583,8 +1592,16 @@
                 els.currentHandwashCups.textContent = formatNumber((mix.handwash / 100) * dailyCups, 0) + ' cups/day';
                 els.currentDishwasherCups.textContent = formatNumber((mix.dishwasher / 100) * dailyCups, 0) + ' cups/day';
                 
-                els.currentValidation.textContent = total === 100 ? 'Perfect! Total: 100%' : `Total: ${total}% - adjust to 100%`;
-                els.currentValidation.className = total === 100 ? 'validation valid' : 'validation invalid';
+                if (total === 100) {
+                    els.currentValidation.textContent = 'Perfect! Your percentages add up to 100%';
+                    els.currentValidation.className = 'validation valid';
+                } else if (total > 100) {
+                    els.currentValidation.textContent = `Total is ${total}% - reduce by ${total - 100}% to reach 100%`;
+                    els.currentValidation.className = 'validation invalid';
+                } else {
+                    els.currentValidation.textContent = `Total is ${total}% - add ${100 - total}% more to reach 100%`;
+                    els.currentValidation.className = 'validation invalid';
+                }
             } else {
                 els.optimalPaperValue.textContent = mix.paper + '%';
                 els.optimalInstarinseValue.textContent = mix.instarinse + '%';
@@ -1596,8 +1613,16 @@
                 els.optimalHandwashCups.textContent = formatNumber((mix.handwash / 100) * dailyCups, 0) + ' cups/day';
                 els.optimalDishwasherCups.textContent = formatNumber((mix.dishwasher / 100) * dailyCups, 0) + ' cups/day';
                 
-                els.optimalValidation.textContent = total === 100 ? 'Perfect! Total: 100%' : `Total: ${total}% - adjust to 100%`;
-                els.optimalValidation.className = total === 100 ? 'validation valid' : 'validation invalid';
+                if (total === 100) {
+                    els.optimalValidation.textContent = 'Perfect! Your percentages add up to 100%';
+                    els.optimalValidation.className = 'validation valid';
+                } else if (total > 100) {
+                    els.optimalValidation.textContent = `Total is ${total}% - reduce by ${total - 100}% to reach 100%`;
+                    els.optimalValidation.className = 'validation invalid';
+                } else {
+                    els.optimalValidation.textContent = `Total is ${total}% - add ${100 - total}% more to reach 100%`;
+                    els.optimalValidation.className = 'validation invalid';
+                }
             }
             calculateSavings();
         }
