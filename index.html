@@ -913,6 +913,7 @@
                         <div class="detail-item"><span class="detail-label">Labour <span class="per-text">(per cup)</span></span> <span class="detail-value">0 sec</span></div>
                     </div>
                     <div class="method-note">Manufacturing + disposal costs</div>
+                    <div class="method-note" style="margin-top: 8px; font-style: normal; color: var(--neutral-500); font-size: 0.8rem;">💡 Cost = Cup price only</div>
                 </div>
                 
                 <div class="comparison-card">
@@ -926,6 +927,7 @@
                         <div class="detail-item"><span class="detail-label">Labour <span class="per-text">(per cup)</span></span> <span class="detail-value">0 sec</span></div>
                     </div>
                     <div class="method-note">Self-service (no labour cost)</div>
+                    <div class="method-note" style="margin-top: 8px; font-style: normal; color: var(--neutral-500); font-size: 0.8rem;">💡 Cost = Detergent + Energy (Water heating)</div>
                 </div>
                 
                 <div class="comparison-card">
@@ -939,6 +941,7 @@
                         <div class="detail-item"><span class="detail-label">Labour time <span class="per-text">(per load)</span></span> <span class="detail-value"><span id="dishwasherLabourTime">10</span> min</span></div>
                     </div>
                     <div class="method-note"><span id="dishwasherCapacityNote">40</span> cups per load • Includes loading/unloading</div>
+                    <div class="method-note" style="margin-top: 8px; font-style: normal; color: var(--neutral-500); font-size: 0.8rem;">💡 Cost = Energy + Labour + Detergent (per load ÷ capacity)</div>
                 </div>
                 
                 <div class="comparison-card instarinse">
@@ -952,6 +955,7 @@
                         <div class="detail-item"><span class="detail-label">Maintenance <span class="per-text">(per 100 cups)</span></span> <span class="detail-value"><span id="instarinseLabourTime">5</span> min</span></div>
                     </div>
                     <div class="method-note">Maintenance includes tank changes & daily cleaning</div>
+                    <div class="method-note" style="margin-top: 8px; font-style: normal; color: var(--neutral-500); font-size: 0.8rem;">💡 Cost = Energy + Labour (minimal maintenance)</div>
                 </div>
             </div>
             
@@ -1411,6 +1415,17 @@
                     <div class="assumption-source"><a href="https://www.eea.europa.eu/en" class="source-link" target="_blank">European Environment Agency</a></div>
                 </div>
                 <div class="assumption-item">
+                    <label class="assumption-label">Labour Time per Load</label>
+                    <div class="assumption-row">
+                        <input type="number" id="dishwasherLabour" value="10" step="1" min="1" max="30" class="assumption-input" onchange="updateCalculations()">
+                        <span class="assumption-unit">minutes</span>
+                        <button class="reset-btn" onclick="resetAssumption('dishwasherLabour', 10)">
+                            <svg viewBox="0 0 24 24"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/></svg>
+                        </button>
+                    </div>
+                    <div class="assumption-source">Loading + unloading time</div>
+                </div>
+                <div class="assumption-item">
                     <label class="assumption-label">Detergent per Load</label>
                     <div class="assumption-row">
                         <input type="number" id="dishwasherDetergent" value="0.15" step="0.01" min="0.05" max="0.5" class="assumption-input" onchange="updateCalculations()">
@@ -1662,7 +1677,7 @@
             if (modifiedAssumptions.has('dishwasherWater')) document.getElementById('dishwasherWater').value = GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad;
             if (modifiedAssumptions.has('dishwasherEnergy')) document.getElementById('dishwasherEnergy').value = GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad;
             if (modifiedAssumptions.has('dishwasherCo2')) document.getElementById('dishwasherCo2').value = GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad;
-            // Note: dishwasherLabour field doesn't exist in modal - labour time is not editable
+            if (modifiedAssumptions.has('dishwasherLabour')) document.getElementById('dishwasherLabour').value = GLOBAL_ASSUMPTIONS.dishwasher.labourTimePerLoad;
             if (modifiedAssumptions.has('dishwasherDetergent')) document.getElementById('dishwasherDetergent').value = GLOBAL_ASSUMPTIONS.dishwasher.detergentPerLoad;
             if (modifiedAssumptions.has('electricityRate')) document.getElementById('electricityRate').value = GLOBAL_ASSUMPTIONS.electricityRate;
             if (modifiedAssumptions.has('labourRate')) document.getElementById('labourRate').value = GLOBAL_ASSUMPTIONS.labourRate;
@@ -1755,7 +1770,7 @@
             document.getElementById('dishwasherWater').value = DEFAULT_ASSUMPTIONS.dishwasher.waterPerLoad;
             document.getElementById('dishwasherEnergy').value = DEFAULT_ASSUMPTIONS.dishwasher.energyPerLoad;
             document.getElementById('dishwasherCo2').value = DEFAULT_ASSUMPTIONS.dishwasher.co2PerLoad;
-            // Note: dishwasherLabour field doesn't exist in the modal, so skip it
+            document.getElementById('dishwasherLabour').value = DEFAULT_ASSUMPTIONS.dishwasher.labourTimePerLoad;
             document.getElementById('dishwasherDetergent').value = DEFAULT_ASSUMPTIONS.dishwasher.detergentPerLoad;
             document.getElementById('electricityRate').value = DEFAULT_ASSUMPTIONS.electricityRate;
             document.getElementById('labourRate').value = DEFAULT_ASSUMPTIONS.labourRate;
@@ -2136,6 +2151,7 @@
             GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad = parseFloat(document.getElementById('dishwasherWater')?.value) || DEFAULT_ASSUMPTIONS.dishwasher.waterPerLoad;
             GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad = parseFloat(document.getElementById('dishwasherEnergy')?.value) || DEFAULT_ASSUMPTIONS.dishwasher.energyPerLoad;
             GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad = parseFloat(document.getElementById('dishwasherCo2')?.value) || DEFAULT_ASSUMPTIONS.dishwasher.co2PerLoad;
+            GLOBAL_ASSUMPTIONS.dishwasher.labourTimePerLoad = parseFloat(document.getElementById('dishwasherLabour')?.value) || DEFAULT_ASSUMPTIONS.dishwasher.labourTimePerLoad;
             GLOBAL_ASSUMPTIONS.dishwasher.detergentPerLoad = parseFloat(document.getElementById('dishwasherDetergent')?.value) || DEFAULT_ASSUMPTIONS.dishwasher.detergentPerLoad;
             GLOBAL_ASSUMPTIONS.electricityRate = parseFloat(document.getElementById('electricityRate')?.value) || DEFAULT_ASSUMPTIONS.electricityRate;
             GLOBAL_ASSUMPTIONS.labourRate = parseFloat(document.getElementById('labourRate')?.value) || DEFAULT_ASSUMPTIONS.labourRate;
@@ -2153,6 +2169,7 @@
             if (Math.abs(GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad - DEFAULT_ASSUMPTIONS.dishwasher.waterPerLoad) > 0.001) modifiedAssumptions.add('dishwasherWater');
             if (Math.abs(GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad - DEFAULT_ASSUMPTIONS.dishwasher.energyPerLoad) > 0.001) modifiedAssumptions.add('dishwasherEnergy');
             if (Math.abs(GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad - DEFAULT_ASSUMPTIONS.dishwasher.co2PerLoad) > 0.001) modifiedAssumptions.add('dishwasherCo2');
+            if (Math.abs(GLOBAL_ASSUMPTIONS.dishwasher.labourTimePerLoad - DEFAULT_ASSUMPTIONS.dishwasher.labourTimePerLoad) > 0.001) modifiedAssumptions.add('dishwasherLabour');
             if (Math.abs(GLOBAL_ASSUMPTIONS.dishwasher.detergentPerLoad - DEFAULT_ASSUMPTIONS.dishwasher.detergentPerLoad) > 0.001) modifiedAssumptions.add('dishwasherDetergent');
             if (Math.abs(GLOBAL_ASSUMPTIONS.electricityRate - DEFAULT_ASSUMPTIONS.electricityRate) > 0.001) modifiedAssumptions.add('electricityRate');
             if (Math.abs(GLOBAL_ASSUMPTIONS.labourRate - DEFAULT_ASSUMPTIONS.labourRate) > 0.001) modifiedAssumptions.add('labourRate');
@@ -2175,6 +2192,7 @@
                     case 'dishwasherWater': defaultValue = DEFAULT_ASSUMPTIONS.dishwasher.waterPerLoad; break;
                     case 'dishwasherEnergy': defaultValue = DEFAULT_ASSUMPTIONS.dishwasher.energyPerLoad; break;
                     case 'dishwasherCo2': defaultValue = DEFAULT_ASSUMPTIONS.dishwasher.co2PerLoad; break;
+                    case 'dishwasherLabour': defaultValue = DEFAULT_ASSUMPTIONS.dishwasher.labourTimePerLoad; break;
                     case 'dishwasherDetergent': defaultValue = DEFAULT_ASSUMPTIONS.dishwasher.detergentPerLoad; break;
                     case 'electricityRate': defaultValue = DEFAULT_ASSUMPTIONS.electricityRate; break;
                     case 'labourRate': defaultValue = DEFAULT_ASSUMPTIONS.labourRate; break;
