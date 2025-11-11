@@ -225,10 +225,11 @@
                      display: inline-flex; align-items: center; gap: 8px; }
         .adjust-btn:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 6px 24px rgba(144, 212, 246, 0.5); }
         
-        .comparison-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-        .comparison-card.instarinse { grid-column: 2; margin-top: 24px; position: relative; overflow: hidden; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; overflow: visible; }
+        .comparison-card.instarinse { grid-column: 2; margin-top: 24px; position: relative; overflow: visible; }
         .comparison-card { background: var(--white); border: 1px solid var(--neutral-200); border-radius: 16px;
-                          padding: 24px; transition: all 0.3s; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+                          padding: 24px; transition: all 0.3s; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+                          overflow: visible; }
         .comparison-card:hover { border-color: var(--primary); transform: translateY(-2px); }
         .comparison-card.instarinse { border-color: #22c55e; background: rgba(34, 197, 94, 0.02); 
                                      border-width: 2px; box-shadow: 0 4px 20px rgba(34, 197, 94, 0.25), 0 0 0 1px rgba(34, 197, 94, 0.1); }
@@ -259,11 +260,16 @@
         .cost-tooltip-icon:hover { background: var(--primary); color: white; transform: scale(1.1); }
         .cost-tooltip-text { visibility: hidden; opacity: 0; position: absolute; bottom: 125%; left: 50%; 
                             transform: translateX(-50%); background: var(--neutral-900); color: white; 
-                            padding: 8px 12px; border-radius: 8px; font-size: 0.75rem; white-space: nowrap;
-                            z-index: 100; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+                            padding: 10px 14px; border-radius: 8px; font-size: 0.75rem; white-space: normal;
+                            z-index: 1000; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                            min-width: 140px; max-width: 200px; width: max-content; text-align: center; line-height: 1.4; }
         .cost-tooltip-text::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
                                     border: 6px solid transparent; border-top-color: var(--neutral-900); }
         .cost-tooltip:hover .cost-tooltip-text { visibility: visible; opacity: 1; }
+        
+        /* Prevent overflow on rightmost card */
+        .comparison-card.instarinse .cost-tooltip-text { left: auto; right: 0; transform: translateX(0); }
+        .comparison-card.instarinse .cost-tooltip-text::after { left: auto; right: 20px; transform: translateX(0); }
         
         .results-section { margin: 60px 0; }
         .results-cards { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); 
@@ -578,6 +584,7 @@
             .tab-button span:last-child { font-size: 0.7rem; }
             .tab-number { width: 20px; height: 20px; font-size: 0.75rem; }
             .preset-buttons { grid-template-columns: repeat(3, 1fr); }
+            .cost-tooltip-text { max-width: 160px; font-size: 0.72rem; }
         }
         
         @media (max-width: 640px) {
@@ -630,7 +637,9 @@
             .valid::before, .invalid::before { font-size: 1.1rem; }
             .slider-emoji { font-size: 1.1rem; }
             .cost-tooltip-icon { width: 14px; height: 14px; font-size: 0.65rem; }
-            .cost-tooltip-text { font-size: 0.7rem; padding: 6px 10px; white-space: normal; max-width: 200px; }
+            .cost-tooltip-text { font-size: 0.7rem; padding: 6px 10px; white-space: normal; max-width: 140px; 
+                                left: 50%; transform: translateX(-50%); }
+            .cost-tooltip-text::after { left: 50%; }
         }
     </style>
 </head>
