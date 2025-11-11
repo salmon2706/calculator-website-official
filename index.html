@@ -67,6 +67,14 @@
         .step-instruction h3 { font-size: 1.1rem; font-weight: 700; color: var(--neutral-900); margin-bottom: 8px; }
         .step-instruction p { color: var(--neutral-600); font-size: 0.95rem; line-height: 1.5; }
         
+        /* Reset Button */
+        .reset-defaults-btn { background: transparent; border: 2px solid var(--neutral-300); color: var(--neutral-600);
+                             padding: 10px 20px; border-radius: 10px; font-weight: 600; font-size: 0.9rem;
+                             cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; gap: 6px;
+                             margin-bottom: 20px; }
+        .reset-defaults-btn:hover { background: var(--neutral-100); border-color: var(--neutral-400); color: var(--neutral-800);
+                                   transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        
         /* Navigation Buttons */
         .tab-navigation-buttons { display: flex; justify-content: space-between; align-items: center; gap: 16px; 
                                  margin-top: 40px; padding-top: 30px; border-top: 2px solid var(--neutral-100); }
@@ -582,6 +590,7 @@
             .preset-buttons { grid-template-columns: repeat(2, 1fr); }
             .preset-btn { padding: 10px 12px; }
             .preset-btn .preset-icon { font-size: 1.3rem; }
+            .reset-defaults-btn { font-size: 0.85rem; padding: 8px 16px; }
         }
 
         @media (max-width: 400px) {
@@ -645,6 +654,8 @@
                 <div class="step-number">1</div>
                 <h2 class="step-title">Your Site</h2>
             </div>
+            
+            <button class="reset-defaults-btn" onclick="resetTab1()">🔄 Reset to Defaults</button>
                 
                 <div class="input-grid">
                     <div class="input-group">
@@ -685,6 +696,8 @@
                 <div class="step-number">2</div>
                 <h2 class="step-title">Your Current Mix</h2>
             </div>
+            
+            <button class="reset-defaults-btn" onclick="resetTab2()">🔄 Reset to Defaults</button>
             
             <div class="slider-grid">
                 <div class="slider-row">
@@ -781,6 +794,8 @@
                 <h2 class="step-title">With instarinse®</h2>
             </div>
             
+            <button class="reset-defaults-btn" onclick="resetTab3()">🔄 Reset to Defaults</button>
+            
             <div class="slider-grid">
                 <div class="slider-row">
                     <div class="slider-header">
@@ -860,6 +875,8 @@
                     <h2 class="comparisons-title">The Numbers</h2>
                 </div>
             </div>
+            
+            <button class="reset-defaults-btn" onclick="resetTab4()">🔄 Reset All Assumptions to Defaults</button>
             
             <div class="assumptions-callout">
                 <h4>⚙️ Customize Your Calculations</h4>
@@ -1643,6 +1660,71 @@
             }, 300);
         }
         
+        // Reset Tab Functions
+        function resetTab1() {
+            state.teamSize = 1500;
+            state.officeDays = 4;
+            state.cupsPerDay = 2;
+            
+            els.teamSize.value = 1500;
+            els.officeDays.value = 4;
+            els.cupsPerDay.value = 2;
+            
+            updateDailyUsage();
+        }
+        
+        function resetTab2() {
+            state.current = { paper: 30, handwash: 20, dishwasher: 50 };
+            
+            els.currentPaper.value = 30;
+            els.currentHandwash.value = 20;
+            els.currentDishwasher.value = 50;
+            
+            updateSliderDisplay('current');
+        }
+        
+        function resetTab3() {
+            state.optimal = { paper: 0, instarinse: 70, handwash: 10, dishwasher: 20 };
+            
+            els.optimalPaper.value = 0;
+            els.optimalInstarinse.value = 70;
+            els.optimalHandwash.value = 10;
+            els.optimalDishwasher.value = 20;
+            
+            updateSliderDisplay('optimal');
+        }
+        
+        function resetTab4() {
+            // Reset all assumptions to defaults
+            Object.assign(GLOBAL_ASSUMPTIONS, JSON.parse(JSON.stringify(DEFAULT_ASSUMPTIONS)));
+            modifiedAssumptions.clear();
+            
+            // Update all assumption input fields
+            document.getElementById('paperCupCost').value = DEFAULT_ASSUMPTIONS.paperCup.cost;
+            document.getElementById('paperCupWater').value = DEFAULT_ASSUMPTIONS.paperCup.water;
+            document.getElementById('paperCupEnergy').value = DEFAULT_ASSUMPTIONS.paperCup.energy;
+            document.getElementById('paperCupCo2').value = DEFAULT_ASSUMPTIONS.paperCup.co2;
+            document.getElementById('handwashWater').value = DEFAULT_ASSUMPTIONS.handwash.waterPerCup;
+            document.getElementById('handwashEnergy').value = DEFAULT_ASSUMPTIONS.handwash.energyPerCup;
+            document.getElementById('handwashDetergent').value = DEFAULT_ASSUMPTIONS.handwash.detergentPerCup;
+            document.getElementById('handwashCo2').value = DEFAULT_ASSUMPTIONS.handwash.co2PerCup;
+            document.getElementById('dishwasherCapacity').value = DEFAULT_ASSUMPTIONS.dishwasher.capacity;
+            document.getElementById('dishwasherWater').value = DEFAULT_ASSUMPTIONS.dishwasher.waterPerLoad;
+            document.getElementById('dishwasherEnergy').value = DEFAULT_ASSUMPTIONS.dishwasher.energyPerLoad;
+            document.getElementById('dishwasherCo2').value = DEFAULT_ASSUMPTIONS.dishwasher.co2PerLoad;
+            document.getElementById('dishwasherLabour').value = DEFAULT_ASSUMPTIONS.dishwasher.labourTimePerLoad;
+            document.getElementById('dishwasherDetergent').value = DEFAULT_ASSUMPTIONS.dishwasher.detergentPerLoad;
+            document.getElementById('electricityRate').value = DEFAULT_ASSUMPTIONS.electricityRate;
+            document.getElementById('labourRate').value = DEFAULT_ASSUMPTIONS.labourRate;
+            
+            // Remove modified class from all inputs
+            document.querySelectorAll('.assumption-input').forEach(input => {
+                input.classList.remove('modified');
+            });
+            
+            updateCalculations();
+        }
+        
         // Preset Scenarios Function
         function applyPreset(presetType) {
             const presets = {
@@ -2114,6 +2196,10 @@
         window.showTab = showTab;
         window.applyPreset = applyPreset;
         window.copyShareURL = copyShareURL;
+        window.resetTab1 = resetTab1;
+        window.resetTab2 = resetTab2;
+        window.resetTab3 = resetTab3;
+        window.resetTab4 = resetTab4;
         window.openAssumptions = openAssumptions;
         window.closeAssumptions = closeAssumptions;
         window.updateCalculations = updateCalculations;
