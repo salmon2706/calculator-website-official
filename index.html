@@ -251,6 +251,20 @@
         
         .method-note { font-size: 0.85rem; color: var(--neutral-600); font-style: italic; margin-top: 12px; }
         
+        /* Cost Tooltip */
+        .cost-tooltip { position: relative; display: inline-block; margin-left: 6px; }
+        .cost-tooltip-icon { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px;
+                            background: var(--neutral-200); border-radius: 50%; font-size: 0.7rem; font-weight: 700;
+                            color: var(--neutral-600); cursor: help; transition: all 0.2s; }
+        .cost-tooltip-icon:hover { background: var(--primary); color: white; transform: scale(1.1); }
+        .cost-tooltip-text { visibility: hidden; opacity: 0; position: absolute; bottom: 125%; left: 50%; 
+                            transform: translateX(-50%); background: var(--neutral-900); color: white; 
+                            padding: 8px 12px; border-radius: 8px; font-size: 0.75rem; white-space: nowrap;
+                            z-index: 100; transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .cost-tooltip-text::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+                                    border: 6px solid transparent; border-top-color: var(--neutral-900); }
+        .cost-tooltip:hover .cost-tooltip-text { visibility: visible; opacity: 1; }
+        
         .results-section { margin: 60px 0; }
         .results-cards { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); 
                         border-radius: 24px; padding: 50px; margin-bottom: 60px; color: white; text-align: center; 
@@ -615,6 +629,8 @@
             .validation { font-size: 0.9rem; padding: 12px 16px; }
             .valid::before, .invalid::before { font-size: 1.1rem; }
             .slider-emoji { font-size: 1.1rem; }
+            .cost-tooltip-icon { width: 14px; height: 14px; font-size: 0.65rem; }
+            .cost-tooltip-text { font-size: 0.7rem; padding: 6px 10px; white-space: normal; max-width: 200px; }
         }
     </style>
 </head>
@@ -904,7 +920,13 @@
             <div class="comparison-grid">
                 <div class="comparison-card">
                     <div class="method-name">Paper Cup</div>
-                    <div class="method-cost"><span id="paperCostDisplay">28</span>p <small>(per cup)</small></div>
+                    <div class="method-cost">
+                        <span id="paperCostDisplay">28</span>p <small>(per cup)</small>
+                        <span class="cost-tooltip">
+                            <span class="cost-tooltip-icon">?</span>
+                            <span class="cost-tooltip-text">Cup price only</span>
+                        </span>
+                    </div>
                     <div class="details-grid">
                         <div class="detail-item"><span class="detail-label">Cost <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="paperCostOnly">28</span>p</span></div>
                         <div class="detail-item"><span class="detail-label">Water <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="paperWaterOnly">0.25</span>L</span></div>
@@ -913,12 +935,17 @@
                         <div class="detail-item"><span class="detail-label">Labour <span class="per-text">(per cup)</span></span> <span class="detail-value">0 sec</span></div>
                     </div>
                     <div class="method-note">Manufacturing + disposal costs</div>
-                    <div class="method-note" style="margin-top: 8px; font-style: normal; color: var(--neutral-500); font-size: 0.8rem;">💡 Cost = Cup price only</div>
                 </div>
                 
                 <div class="comparison-card">
                     <div class="method-name">Hand Washing</div>
-                    <div class="method-cost"><span id="handwashCostDisplay">3</span>p <small>(per cup)</small></div>
+                    <div class="method-cost">
+                        <span id="handwashCostDisplay">3</span>p <small>(per cup)</small>
+                        <span class="cost-tooltip">
+                            <span class="cost-tooltip-icon">?</span>
+                            <span class="cost-tooltip-text">Detergent + Energy (water heating)</span>
+                        </span>
+                    </div>
                     <div class="details-grid">
                         <div class="detail-item"><span class="detail-label">Detergent <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="handwashDetergentOnly">1</span>p</span></div>
                         <div class="detail-item"><span class="detail-label">Water <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="handwashWaterOnly">1.0</span>L</span></div>
@@ -927,12 +954,17 @@
                         <div class="detail-item"><span class="detail-label">Labour <span class="per-text">(per cup)</span></span> <span class="detail-value">0 sec</span></div>
                     </div>
                     <div class="method-note">Self-service (no labour cost)</div>
-                    <div class="method-note" style="margin-top: 8px; font-style: normal; color: var(--neutral-500); font-size: 0.8rem;">💡 Cost = Detergent + Energy (Water heating)</div>
                 </div>
                 
                 <div class="comparison-card">
                     <div class="method-name">Dishwasher</div>
-                    <div class="method-cost"><span id="dishwasherCostDisplay">6</span>p <small>(per cup)</small></div>
+                    <div class="method-cost">
+                        <span id="dishwasherCostDisplay">6</span>p <small>(per cup)</small>
+                        <span class="cost-tooltip">
+                            <span class="cost-tooltip-icon">?</span>
+                            <span class="cost-tooltip-text">Energy + Labour + Detergent (per load ÷ capacity)</span>
+                        </span>
+                    </div>
                     <div class="details-grid">
                         <div class="detail-item"><span class="detail-label">Total cost <span class="per-text">(per load)</span></span> <span class="detail-value">£<span id="dishwasherLoadCost">2.40</span></span></div>
                         <div class="detail-item"><span class="detail-label">Water <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="dishwasherWaterOnly">0.33</span>L</span></div>
@@ -941,12 +973,17 @@
                         <div class="detail-item"><span class="detail-label">Labour time <span class="per-text">(per load)</span></span> <span class="detail-value"><span id="dishwasherLabourTime">10</span> min</span></div>
                     </div>
                     <div class="method-note"><span id="dishwasherCapacityNote">40</span> cups per load • Includes loading/unloading</div>
-                    <div class="method-note" style="margin-top: 8px; font-style: normal; color: var(--neutral-500); font-size: 0.8rem;">💡 Cost = Energy + Labour + Detergent (per load ÷ capacity)</div>
                 </div>
                 
                 <div class="comparison-card instarinse">
                     <div class="method-name">instarinse®</div>
-                    <div class="method-cost"><span id="instarinseCostDisplay">1.2</span>p <small>(per cup)</small></div>
+                    <div class="method-cost">
+                        <span id="instarinseCostDisplay">1.2</span>p <small>(per cup)</small>
+                        <span class="cost-tooltip">
+                            <span class="cost-tooltip-icon">?</span>
+                            <span class="cost-tooltip-text">Energy + Labour (minimal maintenance)</span>
+                        </span>
+                    </div>
                     <div class="details-grid">
                         <div class="detail-item"><span class="detail-label">Operation cost <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="instarinseOpOnly">1.2</span>p</span></div>
                         <div class="detail-item"><span class="detail-label">Water <span class="per-text">(per cup)</span></span> <span class="detail-value"><span id="instarinseWaterOnly">50</span>ml</span></div>
@@ -955,7 +992,6 @@
                         <div class="detail-item"><span class="detail-label">Maintenance <span class="per-text">(per 100 cups)</span></span> <span class="detail-value"><span id="instarinseLabourTime">5</span> min</span></div>
                     </div>
                     <div class="method-note">Maintenance includes tank changes & daily cleaning</div>
-                    <div class="method-note" style="margin-top: 8px; font-style: normal; color: var(--neutral-500); font-size: 0.8rem;">💡 Cost = Energy + Labour (minimal maintenance)</div>
                 </div>
             </div>
             
