@@ -1662,7 +1662,7 @@
             if (modifiedAssumptions.has('dishwasherWater')) document.getElementById('dishwasherWater').value = GLOBAL_ASSUMPTIONS.dishwasher.waterPerLoad;
             if (modifiedAssumptions.has('dishwasherEnergy')) document.getElementById('dishwasherEnergy').value = GLOBAL_ASSUMPTIONS.dishwasher.energyPerLoad;
             if (modifiedAssumptions.has('dishwasherCo2')) document.getElementById('dishwasherCo2').value = GLOBAL_ASSUMPTIONS.dishwasher.co2PerLoad;
-            if (modifiedAssumptions.has('dishwasherLabour')) document.getElementById('dishwasherLabour').value = GLOBAL_ASSUMPTIONS.dishwasher.labourTimePerLoad;
+            // Note: dishwasherLabour field doesn't exist in modal - labour time is not editable
             if (modifiedAssumptions.has('dishwasherDetergent')) document.getElementById('dishwasherDetergent').value = GLOBAL_ASSUMPTIONS.dishwasher.detergentPerLoad;
             if (modifiedAssumptions.has('electricityRate')) document.getElementById('electricityRate').value = GLOBAL_ASSUMPTIONS.electricityRate;
             if (modifiedAssumptions.has('labourRate')) document.getElementById('labourRate').value = GLOBAL_ASSUMPTIONS.labourRate;
@@ -1755,7 +1755,7 @@
             document.getElementById('dishwasherWater').value = DEFAULT_ASSUMPTIONS.dishwasher.waterPerLoad;
             document.getElementById('dishwasherEnergy').value = DEFAULT_ASSUMPTIONS.dishwasher.energyPerLoad;
             document.getElementById('dishwasherCo2').value = DEFAULT_ASSUMPTIONS.dishwasher.co2PerLoad;
-            document.getElementById('dishwasherLabour').value = DEFAULT_ASSUMPTIONS.dishwasher.labourTimePerLoad;
+            // Note: dishwasherLabour field doesn't exist in the modal, so skip it
             document.getElementById('dishwasherDetergent').value = DEFAULT_ASSUMPTIONS.dishwasher.detergentPerLoad;
             document.getElementById('electricityRate').value = DEFAULT_ASSUMPTIONS.electricityRate;
             document.getElementById('labourRate').value = DEFAULT_ASSUMPTIONS.labourRate;
