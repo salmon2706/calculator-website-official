@@ -2713,11 +2713,33 @@
         function sendHeight() {
             const height = document.body.scrollHeight;
             parent.postMessage({ frameHeight: height }, "*");
+            // Also try alternative format
+            parent.postMessage({ type: 'resize', height: height }, "*");
         }
+        
         // Send height on load
-        window.addEventListener("load", sendHeight);
-        // Send height on resize (useful if content changes)
+        window.addEventListener("load", function() {
+            setTimeout(sendHeight, 100);
+            setTimeout(sendHeight, 500);
+            setTimeout(sendHeight, 1000);
+        });
+        
+        // Send height on resize
         window.addEventListener("resize", sendHeight);
+        
+        // Send height when tabs change (override showTab to trigger)
+        const originalShowTab = window.showTab;
+        window.showTab = function(tabNumber) {
+            originalShowTab(tabNumber);
+            setTimeout(sendHeight, 100);
+            setTimeout(sendHeight, 300);
+        };
+        
+        // Observe DOM changes and send height
+        const observer = new MutationObserver(function() {
+            sendHeight();
+        });
+        observer.observe(document.body, { childList: true, subtree: true, attributes: true });
     </script>
 </body>
 </html>
