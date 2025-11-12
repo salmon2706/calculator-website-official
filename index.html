@@ -2707,5 +2707,17 @@
 
         window.exportToExcel = exportToExcel;
     </script>
+    
+    <script>
+        // Dynamic iframe height for Webflow embed
+        function sendHeight() {
+            const height = document.body.scrollHeight;
+            parent.postMessage({ frameHeight: height }, "*");
+        }
+        // Send height on load
+        window.addEventListener("load", sendHeight);
+        // Send height on resize (useful if content changes)
+        window.addEventListener("resize", sendHeight);
+    </script>
 </body>
 </html>
